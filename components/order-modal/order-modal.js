@@ -145,7 +145,7 @@ Component({
                 'dash_delete', 'dash_delete_confirm', 'dash_success', 'dash_saved',
                 'ord_err_name', 'ord_err_phone', 'ord_err_time', 'ord_err_cycle_start',
                 'ord_err_cycle', 'ord_err_quota', 'ord_err_users', 'ord_err_overlap',
-                'ord_err_freq', 'ord_sort_alpha', 'ord_sort_history'
+                'ord_err_freq', 'ord_sort_alpha', 'ord_sort_cycle'
             ];
             const strings = {};
             keys.forEach(k => strings[k] = t(k, null, lang));
@@ -193,7 +193,7 @@ Component({
                            user.initial.toLowerCase() === normalizedQuery;
                 });
 
-            if (this.data.customerSortMode === 'history' && !normalizedQuery) {
+            if (this.data.customerSortMode === 'cycle' && !normalizedQuery) {
                 enriched.sort((a, b) => {
                     if (b.historyCount !== a.historyCount) return b.historyCount - a.historyCount;
                     return String(a.name || '').localeCompare(String(b.name || ''));

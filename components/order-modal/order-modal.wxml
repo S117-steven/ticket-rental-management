@@ -112,8 +112,8 @@
         <view class="sort-btn {{customerSortMode === 'alpha' ? 'sort-btn-active' : ''}}" bindtap="onSortChange" data-mode="alpha">
           <text>{{t.ord_sort_alpha}}</text>
         </view>
-        <view class="sort-btn {{customerSortMode === 'history' ? 'sort-btn-active' : ''}}" bindtap="onSortChange" data-mode="history">
-          <text>{{t.ord_sort_history}}</text>
+        <view class="sort-btn {{customerSortMode === 'cycle' ? 'sort-btn-active' : ''}}" bindtap="onSortChange" data-mode="cycle">
+              <text>{{t.ord_sort_cycle}}</text>
         </view>
       </view>
 
