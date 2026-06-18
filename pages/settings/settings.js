@@ -74,7 +74,7 @@ Page({
         const dur = e.currentTarget.dataset.dur;
         const val = parseInt(e.detail.value) || 0;
 
-        const newConfig = { ...this.data.config };
+        const newConfig = { ...this.data.config, priceMatrix: JSON.parse(JSON.stringify(this.data.config.priceMatrix)) };
         newConfig.priceMatrix[type][dur] = val;
         app.updateConfig(newConfig);
         this.setData({ config: newConfig });

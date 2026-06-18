@@ -246,7 +246,8 @@ Page({
             cancelText: 'OK',
             success: (res) => {
                 if (res.confirm) {
-                    wx.setClipboardData({ data: `C${swishNumber};${price};Ticket;0` });
+                    const formattedNumber = Logic.formatSwishNumber(swishNumber);
+                    wx.setClipboardData({ data: `C${formattedNumber};${price};Ticket;0` });
                 }
             }
         });
