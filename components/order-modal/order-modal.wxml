@@ -9,49 +9,12 @@
       <view class="form-section">
         <text class="section-title">{{t.ord_tenant}}</text>
 
-        <view wx:if="{{users.length > 0}}" class="customer-picker">
-          <text class="section-hint">{{t.ord_search_customer}}</text>
-          <view class="input-wrapper">
-            <text class="input-icon">🔎</text>
-            <input class="form-input" placeholder="{{t.ord_customer_search_ph}}" value="{{userQuery}}" bindinput="onCustomerSearch" />
+        <view wx:if="{{users.length > 0}}" class="customer-picker-compact">
+          <view class="customer-action-row">
+            <button class="btn btn-secondary flex-1" bindtap="openCustomerPicker" hover-class="hover-effect">
+              {{t.ord_select}}
+            </button>
           </view>
-
-          <view class="sort-bar">
-            <view class="sort-btn {{customerSortMode === 'alpha' ? 'sort-btn-active' : ''}}" bindtap="onSortChange" data-mode="alpha">
-              <text>{{t.ord_sort_alpha}}</text>
-            </view>
-            <view class="sort-btn {{customerSortMode === 'history' ? 'sort-btn-active' : ''}}" bindtap="onSortChange" data-mode="history">
-              <text>{{t.ord_sort_history}}</text>
-            </view>
-          </view>
-
-          <view class="customer-list-wrapper">
-            <scroll-view scroll-y class="customer-results" scroll-top="{{customerScrollTop}}" wx:if="{{filteredUsers.length > 0}}">
-              <block wx:for="{{customerGroups}}" wx:key="letter" wx:for-item="group">
-                <view wx:if="{{group.letter}}" class="group-header">
-                  <text class="group-letter">{{group.letter}}</text>
-                </view>
-                <view wx:for="{{group.users}}" wx:for-item="user" wx:key="id" 
-                      class="customer-result {{user.id === userId ? 'customer-result-active' : ''}}" 
-                      bindtap="selectCustomer" data-id="{{user.id}}" hover-class="hover-effect">
-                  <view class="customer-result-main">
-                    <text class="customer-name">{{user.name}}</text>
-                    <text class="customer-phone">{{user.phone}}</text>
-                  </view>
-                  <text class="customer-meta">{{user.historyText}}</text>
-                </view>
-              </block>
-            </scroll-view>
-
-            <view wx:if="{{showIndex && indexLetters.length > 0}}" class="index-bar">
-              <view wx:for="{{indexLetters}}" wx:key="*this" class="index-item" 
-                    bindtap="onIndexTap" data-letter="{{item}}" hover-class="hover-effect">
-                <text>{{item}}</text>
-              </view>
-            </view>
-          </view>
-
-          <view wx:if="{{filteredUsers.length === 0 && userQuery}}" class="empty-result">{{t.ord_no_customer_results}}</view>
         </view>
 
         <view wx:if="{{userId}}" class="info-badge">
@@ -127,6 +90,59 @@
       <button class="btn btn-primary flex-1 {{valid ? '' : 'btn-disabled'}}" bindtap="submit" hover-class="hover-effect">
         {{isEdit ? t.set_save : t.ord_confirm}}
       </button>
+    </view>
+  </view>
+</view>
+
+<!-- Customer Picker - Full Screen Overlay -->
+<view class="customer-picker-mask" wx:if="{{showCustomerPicker}}" bindtap="closeCustomerPicker">
+  <view class="customer-picker-container" catchtap="noop">
+    <view class="customer-picker-header">
+      <text class="text-lg font-bold">{{t.ord_search_customer}}</text>
+      <view class="close-btn" bindtap="closeCustomerPicker" hover-class="hover-effect">x</view>
+    </view>
+
+    <view class="customer-picker-body">
+      <view class="search-input-wrapper">
+        <text class="input-icon">🔎</text>
+        <input class="form-input" placeholder="{{t.ord_customer_search_ph}}" value="{{userQuery}}" bindinput="onCustomerSearch" focus="{{showCustomerPicker}}" />
+      </view>
+
+      <view class="sort-bar">
+        <view class="sort-btn {{customerSortMode === 'alpha' ? 'sort-btn-active' : ''}}" bindtap="onSortChange" data-mode="alpha">
+          <text>{{t.ord_sort_alpha}}</text>
+        </view>
+        <view class="sort-btn {{customerSortMode === 'history' ? 'sort-btn-active' : ''}}" bindtap="onSortChange" data-mode="history">
+          <text>{{t.ord_sort_history}}</text>
+        </view>
+      </view>
+
+      <view class="customer-list-wrapper">
+        <scroll-view scroll-y class="customer-results-full" scroll-top="{{customerScrollTop}}">
+          <block wx:for="{{customerGroups}}" wx:key="letter" wx:for-item="group">
+            <view wx:if="{{group.letter}}" class="group-header">
+              <text class="group-letter">{{group.letter}}</text>
+            </view>
+            <view wx:for="{{group.users}}" wx:for-item="user" wx:key="id" 
+                  class="customer-result {{user.id === userId ? 'customer-result-active' : ''}}" 
+                  bindtap="selectCustomerAndClose" data-id="{{user.id}}" hover-class="hover-effect">
+              <view class="customer-result-main">
+                <text class="customer-name">{{user.name}}</text>
+                <text class="customer-phone">{{user.phone}}</text>
+              </view>
+              <text class="customer-meta">{{user.historyText}}</text>
+            </view>
+          </block>
+          <view wx:if="{{filteredUsers.length === 0 && userQuery}}" class="empty-result">{{t.ord_no_customer_results}}</view>
+        </scroll-view>
+
+        <view wx:if="{{showIndex && indexLetters.length > 0}}" class="index-bar">
+          <view wx:for="{{indexLetters}}" wx:key="*this" class="index-item" 
+                bindtap="onIndexTap" data-letter="{{item}}" hover-class="hover-effect">
+            <text>{{item}}</text>
+          </view>
+        </view>
+      </view>
     </view>
   </view>
 </view>

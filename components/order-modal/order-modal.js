@@ -56,7 +56,8 @@ Component({
         customerSortMode: 'alpha',
         customerGroups: [],
         indexLetters: [],
-        showIndex: true
+        showIndex: true,
+        showCustomerPicker: false
     },
 
     methods: {
@@ -281,6 +282,20 @@ Component({
                 this.refreshFilteredUsers('');
                 this.validate();
             });
+        },
+
+        openCustomerPicker() {
+            this.setData({ showCustomerPicker: true });
+            this.refreshFilteredUsers('');
+        },
+
+        closeCustomerPicker() {
+            this.setData({ showCustomerPicker: false });
+        },
+
+        selectCustomerAndClose(e) {
+            this.selectCustomer(e);
+            this.closeCustomerPicker();
         },
 
         onInput(e) {
