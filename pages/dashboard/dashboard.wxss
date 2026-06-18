@@ -1,0 +1,72 @@
+/* Dashboard specific styles */
+.fixed { position: fixed; }
+.bottom-10 { bottom: 80rpx; } /* adjusted for tabbar */
+.right-5 { right: 40rpx; }
+.z-10 { z-index: 10; }
+.rounded-full { border-radius: 9999rpx; }
+
+/* Scroll View for Recent Activity */
+.recent-scroll-view {
+  max-height: 600rpx; /* Approximately 4.5 items */
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.modal-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  width: 85%;
+  background-color: #ffffff;
+  border-radius: 32rpx;
+  padding: 40rpx;
+  transform: translateY(100rpx);
+  transition: all 0.3s;
+}
+
+.modal-active .modal-content {
+  transform: translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.close-btn {
+  font-size: 48rpx;
+  color: #94A3B8;
+  padding: 8rpx;
+}
+
+.modal-body-scroll {
+  max-height: 60vh;
+}
+
+.user-detail-card {
+  border-color: #F1F5F9;
+  background-color: #F8FAFC;
+}
+
+.last-border-0:last-child {
+  border-bottom: 0;
+}

@@ -1,0 +1,126 @@
+<view class="container">
+  
+  <!-- Step 1: Language -->
+  <view wx:if="{{step === 1}}" class="flex flex-col justify-center items-center gap-8 py-20 px-6">
+    <view class="text-center">
+      <view class="text-xl font-bold mb-2">Select Language</view>
+      <view class="text-sm">Please choose your preferred language.</view>
+    </view>
+    <view class="w-full flex flex-col gap-4">
+      <button class="btn w-full px-6 bg-white border flex justify-between items-center" bindtap="setLanguage" data-lang="en" hover-class="hover-effect">
+        <view class="flex items-center gap-4"><text class="text-lg">🇺🇸</text><text class="font-bold">English</text></view>
+        <text class="text-sm">></text>
+      </button>
+      <button class="btn w-full px-6 bg-white border flex justify-between items-center" bindtap="setLanguage" data-lang="zh" hover-class="hover-effect">
+        <view class="flex items-center gap-4"><text class="text-lg">🇨🇳</text><text class="font-bold">简体中文</text></view>
+        <text class="text-sm">></text>
+      </button>
+      <button class="btn w-full px-6 bg-white border flex justify-between items-center" bindtap="setLanguage" data-lang="sv" hover-class="hover-effect">
+        <view class="flex items-center gap-4"><text class="text-lg">🇸🇪</text><text class="font-bold">Svenska</text></view>
+        <text class="text-sm">></text>
+      </button>
+    </view>
+  </view>
+
+  <!-- Step 2: Basic Info -->
+  <view wx:elif="{{step === 2}}" class="flex flex-col gap-8 p-6">
+    <view>
+      <view class="text-xl font-bold mb-2">{{t.ob_welcome}}</view>
+      <view class="text-sm">{{t.ob_subtitle}}</view>
+    </view>
+
+    <view class="flex flex-col gap-2">
+      <text class="text-sm font-bold">{{t.ob_date}}</text>
+      <picker mode="date" value="{{date}}" bindchange="bindDateChange">
+        <view class="input" hover-class="hover-effect">{{date}}</view>
+      </picker>
+      <text class="text-xs">{{t.ob_date_hint}}</text>
+    </view>
+
+    <view class="bg-blue-50 p-6 rounded-3xl flex flex-col gap-4">
+      <view class="flex justify-between items-center">
+        <text class="font-bold text-blue-600">{{t.ob_history}}</text>
+        <switch checked="{{hasHistory}}" bindchange="toggleHistory" color="#2563EB"/>
+      </view>
+
+      <view wx:if="{{hasHistory}}" class="grid grid-cols-2 gap-4">
+        <view class="flex flex-col gap-2">
+          <text class="text-xs font-bold">{{t.ob_sends}}</text>
+          <input type="number" class="input" value="{{sends}}" bindinput="bindNumberInput" data-field="sends" />
+        </view>
+        <view class="flex flex-col gap-2">
+          <text class="text-xs font-bold">{{t.ob_users}}</text>
+          <input type="number" class="input" value="{{users}}" bindinput="bindNumberInput" data-field="users" />
+        </view>
+      </view>
+      <text class="text-xs opacity-70">{{t.ob_new_note}}</text>
+    </view>
+
+    <view class="flex gap-4">
+      <button class="btn btn-secondary flex-1" bindtap="prevStep" hover-class="hover-effect">{{t.ob_prev}}</button>
+      <button class="btn btn-primary flex-1" bindtap="nextStep3" hover-class="hover-effect">{{t.ob_next}}</button>
+    </view>
+  </view>
+
+  <!-- Step 3: Tenant Details -->
+  <view wx:elif="{{step === 3}}" class="flex flex-col gap-6 p-6">
+    <view class="text-lg font-bold">{{t.ob_step2_title}}</view>
+    
+    <scroll-view scroll-y class="flex-1" style="max-height: 60vh;">
+      <view class="flex flex-col gap-4">
+        <block wx:for="{{tenants}}" wx:key="index">
+          <view class="card p-4 flex flex-col gap-4">
+             <text class="text-xs font-bold uppercase opacity-50">{{t.ob_tenant_label}} #{{index + 1}}</text>
+             <view class="grid grid-cols-2 gap-4">
+               <input class="input" placeholder="{{t.ob_name_ph}}" value="{{item.name}}" bindinput="updateTenant" data-idx="{{index}}" data-field="name"/>
+               <view class="flex flex-col gap-1">
+                  <text class="text-xs text-slate-500">{{t.ob_rented_count_label}}</text>
+                  <input class="input" type="number" value="{{item.count}}" bindinput="updateTenant" data-idx="{{index}}" data-field="count"/>
+               </view>
+               <view style="grid-column: span 2;">
+                 <input class="input" type="number" placeholder="{{t.ob_phone_ph}}" value="{{item.phone}}" bindinput="updateTenant" data-idx="{{index}}" data-field="phone"/>
+               </view>
+             </view>
+          </view>
+        </block>
+      </view>
+    </scroll-view>
+
+    <view class="flex gap-4">
+      <button class="btn btn-secondary flex-1" bindtap="prevStep" hover-class="hover-effect">{{t.ob_prev}}</button>
+      <button class="btn btn-primary flex-1" bindtap="nextStep4" hover-class="hover-effect">{{t.ob_next}}</button>
+    </view>
+  </view>
+
+  <!-- Step 4: Price Matrix -->
+  <view wx:elif="{{step === 4}}" class="flex flex-col gap-6 p-6">
+    <view class="text-lg font-bold">{{t.ob_price_title}}</view>
+    
+    <scroll-view scroll-y class="flex-1" style="max-height: 50vh;">
+      <view class="flex flex-col gap-2">
+        <view class="flex px-2 pb-2 border-b">
+          <view class="flex-1 text-xs font-bold">{{t.ob_th_dur}}</view>
+          <view style="width: 140rpx;" class="text-center text-xs font-bold">{{t.ob_th_new}}</view>
+          <view style="width: 140rpx;" class="text-center text-xs font-bold">{{t.ob_th_reg}}</view>
+        </view>
+        <block wx:for="{{DurationType}}" wx:key="*this">
+          <view class="flex items-center py-2 border-b last:border-0">
+            <view class="flex-1 text-sm font-medium">{{item}}</view>
+            <input style="width: 140rpx; height: 72rpx;" class="bg-slate-50 border rounded-xl text-center" type="number" 
+                   value="{{prices.newCustomer[item]}}" bindinput="updatePrice" data-type="newCustomer" data-dur="{{item}}" />
+            <view style="width: 16rpx;"></view>
+            <input style="width: 140rpx; height: 72rpx;" class="bg-slate-50 border rounded-xl text-center" type="number" 
+                   value="{{prices.regularCustomer[item]}}" bindinput="updatePrice" data-type="regularCustomer" data-dur="{{item}}" />
+          </view>
+        </block>
+      </view>
+    </scroll-view>
+
+    <view class="flex gap-4">
+      <button class="btn btn-secondary flex-1" bindtap="prevStep" hover-class="hover-effect">{{t.ob_prev}}</button>
+      <button class="btn bg-green-600 text-white flex-1" bindtap="finish" hover-class="hover-effect">{{t.ob_finish}}</button>
+    </view>
+  </view>
+
+</view>
+

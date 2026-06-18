@@ -1,0 +1,10 @@
+{
+    "navigationBarTitleText": "Dashboard",
+    "enablePullDownRefresh": true,
+    "usingComponents": {
+        "order-modal": "/components/order-modal/order-modal"
+    },
+    "componentPlaceholder": {
+        "order-modal": "view"
+    }
+}

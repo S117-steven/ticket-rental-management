@@ -1,0 +1,168 @@
+<view class="container px-6 py-4">
+  <!-- Header -->
+  <view class="flex justify-between items-center mb-6">
+    <view class="text-xl font-bold">{{t.dash_overview}}</view>
+    <view class="text-xs font-semibold px-2 py-1 bg-blue-50 text-blue-600 rounded-xl border">
+      {{t.daysLeftStr}}
+    </view>
+  </view>
+
+  <!-- Stats Grid -->
+  <view class="grid grid-cols-2 gap-4 mb-8">
+    <!-- Sends -->
+    <view class="card p-4 flex flex-col justify-between" style="min-height: 200rpx;">
+       <view class="flex justify-between items-start">
+         <view class="bg-blue-50 text-blue-600 rounded-xl p-2 text-base">▶</view>
+         <text class="text-xs font-bold uppercase">{{t.dash_sends}}</text>
+       </view>
+       <view>
+         <view class="text-xl font-bold">{{stats.usedCount}}</view>
+         <view class="text-xs mt-1">/{{MAX_SENDS_PER_CYCLE}}</view>
+       </view>
+    </view>
+
+    <!-- Users -->
+    <view class="card p-4 flex flex-col justify-between" style="min-height: 200rpx;">
+       <view class="flex justify-between items-start">
+         <view class="bg-blue-50 text-blue-600 rounded-xl p-2 text-base">👥</view>
+         <text class="text-xs font-bold uppercase">{{t.dash_users}}</text>
+       </view>
+       <view class="flex justify-between items-end">
+         <view>
+           <view class="text-xl font-bold">{{stats.uniqueUsers}}</view>
+           <view class="text-xs mt-1">/{{MAX_USERS_PER_CYCLE}}</view>
+         </view>
+         <view class="text-xs text-blue-600 font-bold border-b border-blue-600" bindtap="toggleUserDetailsModal" hover-class="hover-effect">
+           {{t.dash_view_details}}
+         </view>
+       </view>
+    </view>
+
+    <!-- Revenue -->
+    <view class="card p-4 flex flex-col justify-between" style="grid-column: span 2; min-height: 180rpx;">
+       <view class="flex justify-between items-center">
+         <view>
+           <text class="text-xs font-medium">{{t.dash_revenue}}</text>
+           <view class="text-xl font-bold mt-2">{{stats.totalRevenue}} kr</view>
+         </view>
+         <view style="font-size: 64rpx; opacity: 0.1;">💵</view>
+       </view>
+       <view class="flex items-center gap-2 mt-2">
+         <text class="text-xs" style="color: #16A34A;">●</text>
+         <text class="text-xs">{{t.dash_updated_now}}</text>
+       </view>
+    </view>
+  </view>
+
+  <!-- Next Reservation Section -->
+  <view class="mb-8">
+    <text class="text-lg mb-4" style="display: block;">{{t.dash_next}}</text>
+    
+    <view class="card p-4">
+      <view wx:if="{{!nextOrderText || nextOrderText === t.dash_none}}" class="text-center py-6">
+        <view style="font-size: 64rpx; margin-bottom: 24rpx;">📅</view>
+        <text class="text-base font-semibold" style="display: block;">{{t.dash_none}}</text>
+        <text class="text-sm mt-2" style="display: block;">{{t.dash_caught_up}}</text>
+        <view class="mt-4" bindtap="openOrderModal" hover-class="hover-effect">
+          <text class="text-blue-600 font-bold">{{t.dash_manual_booking}}</text>
+        </view>
+      </view>
+      
+      <view wx:else class="flex justify-between items-center" bindtap="onEditOrder" data-order="{{nextOrderRaw}}">
+        <view>
+          <view class="text-base font-semibold">{{nextOrderText}}</view>
+          <view class="text-sm mt-1">{{nextOrderSub || t.dash_create}}</view>
+        </view>
+        <view class="bg-blue-50 text-blue-600 p-2 rounded-xl" hover-class="hover-effect">></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Recent Activity Section -->
+  <view class="mb-8">
+    <view class="flex justify-between items-end mb-4">
+      <text class="text-lg">{{t.dash_recent}}</text>
+    </view>
+
+    <view class="card">
+      <view wx:if="{{recentOrders.length === 0}}" class="p-8 text-center">
+        <text class="text-sm">{{t.dash_no_orders}}</text>
+      </view>
+      
+      <scroll-view wx:else scroll-y class="recent-scroll-view">
+        <view wx:for="{{recentOrders}}" wx:key="id" class="p-4 border-b last-border-0" bindtap="onEditOrder" data-order="{{item}}">
+          <view class="flex items-center gap-4">
+            <!-- Icon -->
+            <view class="bg-green-50 text-green-600 rounded-full w-10 h-10 flex items-center justify-center text-xs">
+              ✓
+            </view>
+            
+            <!-- Content -->
+            <view class="flex-1">
+              <view class="flex justify-between items-center">
+                <text class="text-sm font-semibold">{{item.orderNumStr}}</text>
+                <text class="text-sm font-bold">+{{item.price}} kr</text>
+              </view>
+              <view class="flex justify-between items-center mt-1">
+                <view class="flex items-center gap-2" catchtap="noop">
+                  <text class="text-xs">{{item.userParams.name}}</text>
+                  <view class="bg-slate-100 px-2 py-1 rounded text-xs text-blue-600 font-bold flex items-center gap-1" catchtap="onCopyPhone" data-phone="{{item.userParams.phone}}" hover-class="hover-effect">
+                    <text>📄 复制</text>
+                  </view>
+                </view>
+                <text class="text-xs">{{item.startTimeStr}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- FAB -->
+  <view class="fixed" style="bottom: 48rpx; right: 48rpx; z-index: 50;" bindtap="openOrderModal">
+    <view class="btn btn-primary rounded-full px-6 shadow-xl flex items-center gap-2" hover-class="hover-effect">
+      <text class="text-xl">+</text>
+      <text>{{t.dash_create}}</text>
+    </view>
+  </view>
+
+  <!-- Modal -->
+  <order-modal show="{{showOrderModal}}" initialData="{{editingOrder}}" bind:close="onOrderModalClose" bind:delete="onDeleteOrder"></order-modal>
+
+  <!-- User Details Modal -->
+  <view class="modal-overlay {{showUserDetailsModal ? 'modal-active' : ''}}" bindtap="toggleUserDetailsModal">
+    <view class="modal-content" catchtap="noop">
+      <view class="modal-header">
+        <text class="text-lg">{{t.dash_user_details_title}}</text>
+        <view class="close-btn" bindtap="toggleUserDetailsModal">×</view>
+      </view>
+      
+      <scroll-view scroll-y class="modal-body-scroll">
+        <view wx:for="{{userDetails}}" wx:key="phone" class="user-detail-card p-4 mb-4 border rounded-xl">
+          <view class="flex justify-between items-center">
+            <view>
+              <view class="text-base font-bold">{{item.name}}</view>
+              <view class="text-xs mt-1" catchtap="onCopyPhone" data-phone="{{item.phone}}" hover-class="hover-effect">
+                {{item.phone}} 📄
+              </view>
+            </view>
+            <view class="text-right">
+              <view class="text-base font-bold text-green-600">{{item.totalAmount}} kr</view>
+              <view class="text-xs mt-1">{{item.countStr}}</view>
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{userDetails.length === 0}}" class="text-center py-8 text-gray-400">
+          {{t.dash_no_orders}}
+        </view>
+      </scroll-view>
+
+      <view class="modal-footer mt-4">
+        <button class="btn btn-primary w-full" bindtap="toggleUserDetailsModal">{{t.dash_close}}</button>
+      </view>
+    </view>
+  </view>
+
+</view>
+

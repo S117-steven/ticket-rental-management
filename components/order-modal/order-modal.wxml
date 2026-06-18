@@ -1,0 +1,107 @@
+<view class="modal-mask" wx:if="{{show}}" bindtap="close">
+  <view class="modal-container" catchtap="noop">
+    <view class="modal-header">
+      <text class="text-xl">{{isEdit ? t.set_save : t.ord_title}}</text>
+      <view class="close-btn" bindtap="close" hover-class="hover-effect">x</view>
+    </view>
+
+    <scroll-view scroll-y class="modal-body">
+      <view class="form-section">
+        <text class="section-title">{{t.ord_tenant}}</text>
+
+        <view wx:if="{{users.length > 0}}" class="customer-picker">
+          <text class="section-hint">{{t.ord_search_customer}}</text>
+          <view class="input-wrapper">
+            <text class="input-icon">🔎</text>
+            <input class="form-input" placeholder="{{t.ord_customer_search_ph}}" value="{{userQuery}}" bindinput="onCustomerSearch" />
+          </view>
+
+          <scroll-view scroll-y class="customer-results" wx:if="{{filteredUsers.length > 0}}">
+            <view wx:for="{{filteredUsers}}" wx:key="id" class="customer-result {{item.id === userId ? 'customer-result-active' : ''}}" bindtap="selectCustomer" data-id="{{item.id}}" hover-class="hover-effect">
+              <view class="customer-result-main">
+                <text class="customer-name">{{item.name}}</text>
+                <text class="customer-phone">{{item.phone}}</text>
+              </view>
+              <text class="customer-meta">{{item.historyText}}</text>
+            </view>
+          </scroll-view>
+
+          <view wx:elif="{{userQuery}}" class="empty-result">{{t.ord_no_customer_results}}</view>
+        </view>
+
+        <view wx:if="{{userId}}" class="info-badge">
+          <view class="flex-1">
+            <text class="text-blue-600 text-sm font-bold">{{t.ord_linked}} {{phone}}</text>
+          </view>
+          <view class="clear-customer" bindtap="clearCustomer" hover-class="hover-effect">{{t.ord_clear_customer}}</view>
+        </view>
+
+        <view class="input-group">
+          <view class="input-wrapper">
+            <text class="input-icon">👤</text>
+            <input class="form-input {{userId ? 'form-input-disabled' : ''}}" placeholder="{{t.ord_name}}" value="{{name}}" bindinput="onInput" data-field="name" disabled="{{!!userId}}" />
+          </view>
+        </view>
+
+        <view class="input-group">
+          <view class="input-wrapper">
+            <text class="input-icon">☎</text>
+            <input class="form-input {{userId ? 'form-input-disabled' : ''}}" type="number" placeholder="{{t.ord_phone}}" value="{{phone}}" bindinput="onInput" data-field="phone" disabled="{{!!userId}}" />
+          </view>
+        </view>
+      </view>
+
+      <view class="form-section">
+        <text class="section-title">{{t.ord_start}}</text>
+        <view class="flex gap-4">
+          <picker mode="date" value="{{date}}" bindchange="bindDateTimeChange" data-field="date" class="custom-picker custom-picker-flex">
+            <view class="picker-button" hover-class="hover-effect">📅 {{date}}</view>
+          </picker>
+          <picker mode="time" value="{{time}}" bindchange="bindDateTimeChange" data-field="time" class="custom-picker custom-picker-flex">
+            <view class="picker-button" hover-class="hover-effect">🕐 {{time}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="form-section">
+        <text class="section-title">{{t.ord_duration}}</text>
+        <picker range="{{DurationType}}" bindchange="onDurationChange" class="custom-picker">
+          <view class="picker-button" hover-class="hover-effect">
+            <text>{{duration}}</text>
+            <text class="text-sm">></text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-section">
+        <view class="reminder-row">
+          <view class="flex items-center gap-4">
+            <text>⏰</text>
+            <text class="font-medium">{{t.ord_reminder_title}}</text>
+          </view>
+          <switch checked="{{hasReminder}}" bindchange="toggleReminder" color="#2563EB" />
+        </view>
+      </view>
+
+      <view class="validation-card {{valid ? 'validation-success' : 'validation-error'}}">
+        <view class="flex justify-between items-center mb-2">
+          <text class="text-sm">{{t.ord_est_price}}</text>
+          <text class="text-xl font-bold">{{price}} kr</text>
+        </view>
+        <view class="flex items-center gap-2 text-sm {{valid ? 'text-green-600' : 'text-red-600'}}">
+          <text>{{valid ? '✓ ' + t.ord_valid : '⚠ ' + (t[reason] || reason)}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="modal-footer">
+      <button wx:if="{{isEdit}}" class="btn bg-red-50 text-red-600 cancel-order-btn" bindtap="deleteOrder" hover-class="hover-effect">
+        {{t.dash_delete}}
+      </button>
+      <button class="btn btn-secondary flex-1" bindtap="close" hover-class="hover-effect">{{t.ord_cancel}}</button>
+      <button class="btn btn-primary flex-1 {{valid ? '' : 'btn-disabled'}}" bindtap="submit" hover-class="hover-effect">
+        {{isEdit ? t.set_save : t.ord_confirm}}
+      </button>
+    </view>
+  </view>
+</view>

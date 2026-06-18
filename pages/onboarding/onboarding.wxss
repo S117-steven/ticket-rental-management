@@ -1,0 +1,4 @@
+/* Pages specific overrides */
+.grid { display: grid; }
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.col-span-2 { grid-column: span 2 / span 2; }

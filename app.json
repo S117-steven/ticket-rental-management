@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/dashboard/dashboard",
+    "pages/calendar/calendar",
+    "pages/settings/settings",
+    "pages/onboarding/onboarding"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "Ticket Manager",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#94a3b8",
+    "selectedColor": "#2563eb",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/dashboard/dashboard",
+        "text": "首页",
+        "iconPath": "images/tab_dash.png",
+        "selectedIconPath": "images/tab_dash_sel.png"
+      },
+      {
+        "pagePath": "pages/calendar/calendar",
+        "text": "排期",
+        "iconPath": "images/tab_cal.png",
+        "selectedIconPath": "images/tab_cal_sel.png"
+      },
+      {
+        "pagePath": "pages/settings/settings",
+        "text": "设置",
+        "iconPath": "images/tab_set.png",
+        "selectedIconPath": "images/tab_set_sel.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

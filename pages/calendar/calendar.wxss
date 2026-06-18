@@ -1,0 +1,6 @@
+/* Calendar specific styles */
+.cal-item-active { border-left: 8rpx solid #16A34A; background-color: #F0FDF4; }
+.cal-item-reserved { border-left: 8rpx solid #F59E0B; background-color: #FFFBEB; }
+.cal-item-past { border-left: 8rpx solid #94A3B8; background-color: #F8FAFC; opacity: 0.6; }
+.cal-item-free { border-left: 8rpx solid #D1FAE5; background-color: #ffffff; }
+.cal-item-occupied { border-left: 8rpx solid #93C5FD; background-color: #EFF6FF; }

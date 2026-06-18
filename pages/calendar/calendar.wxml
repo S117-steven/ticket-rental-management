@@ -1,0 +1,27 @@
+<view class="container px-6 py-4">
+    <view class="text-xl font-bold mb-6">{{t.cal_title}}</view>
+    
+    <view class="flex flex-col gap-4">
+        <block wx:for="{{days}}" wx:key="dateValue">
+            <view class="card p-4 flex justify-between items-center {{item.status.className}}" bindtap="onDayTap" data-type="{{item.status.type}}" data-order-id="{{item.orderId}}" data-date="{{item.dateValue}}" hover-class="hover-effect">
+                <view class="flex items-center gap-6">
+                    <view class="text-center w-12 flex flex-col items-center">
+                        <text class="text-xs font-bold uppercase opacity-50">{{item.weekDay}}</text>
+                        <text class="text-lg font-bold {{item.isToday ? 'text-blue-600' : ''}}">{{item.dateStr}}</text>
+                    </view>
+                    <view>
+                        <view class="text-base font-semibold">{{item.status.label}}</view>
+                        <view wx:if="{{item.status.timeRange}}" class="text-xs mt-1">{{item.status.timeRange}}</view>
+                        <view wx:if="{{item.isToday}}" class="text-xs text-blue-600 font-bold mt-1">{{t.cal_today}}</view>
+                    </view>
+                </view>
+                
+                <view wx:if="{{item.showBadge}}" class="text-xs font-bold px-2 py-1 bg-green-50 text-green-600 rounded-full border border-green-100">{{item.badgeText}}</view>
+                <view wx:elif="{{item.actionText}}" class="text-xs text-blue-600 font-bold">{{item.actionText}}</view>
+                <view wx:elif="{{item.status.type === 'active' || item.status.type === 'reserved'}}" class="text-xs opacity-50">{{t.cal_count_minus}}</view>
+            </view>
+        </block>
+    </view>
+
+    <order-modal show="{{showOrderModal}}" initialData="{{editingOrder}}" presetDate="{{presetDate}}" bind:close="onOrderModalClose" bind:delete="onDeleteOrder"></order-modal>
+</view>

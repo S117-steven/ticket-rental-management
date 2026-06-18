@@ -1,0 +1,59 @@
+<view class="container">
+    <view class="text-xl font-bold mb-6">{{t.set_title}}</view>
+
+    <view class="setting-card">
+        <view class="setting-title">
+            <text>🌐</text> {{t.set_lang}}
+        </view>
+        <picker mode="selector" range="{{['简体中文', 'English', 'Svenska']}}" bindchange="onLangChange">
+            <view class="picker-selector" hover-class="hover-effect">
+                <text>{{config.language === 'zh' ? '简体中文' : (config.language === 'en' ? 'English' : 'Svenska')}}</text>
+                <text class="text-sm">></text>
+            </view>
+        </picker>
+    </view>
+
+    <view class="setting-card">
+        <view class="flex justify-between items-start mb-4">
+            <view class="setting-title mb-0">
+                <text>🔄</text> {{t.set_cycle}}
+            </view>
+            <view class="renew-badge" bindtap="renewTicket" hover-class="hover-effect">
+                {{t.set_renew}}
+            </view>
+        </view>
+        <view class="flex flex-col gap-2">
+            <text class="text-sm font-medium">{{t.set_date}}</text>
+            <picker mode="date" value="{{isoDate}}" bindchange="onDateChange">
+                <view class="input" hover-class="hover-effect">{{isoDate}}</view>
+            </picker>
+            <text class="text-xs">{{t.set_date_hint}}</text>
+        </view>
+    </view>
+
+    <view class="setting-card">
+        <view class="setting-title mb-4">{{t.set_price}}</view>
+        <view class="price-table">
+            <view class="price-header">
+                <view class="flex-1 text-xs font-bold">{{t.ob_th_dur}}</view>
+                <view class="price-header-label">{{t.ob_th_new}}</view>
+                <view style="width: 16rpx;"></view>
+                <view class="price-header-label">{{t.ob_th_reg}}</view>
+            </view>
+            <block wx:for="{{DurationType}}" wx:key="*this">
+                <view class="price-row">
+                    <view class="flex-1 text-sm font-medium">{{item}}</view>
+                    <input class="price-input-small" type="number" 
+                           value="{{config.priceMatrix.newCustomer[item]}}" bindblur="updatePrice" data-type="newCustomer" data-dur="{{item}}" />
+                    <view style="width: 16rpx;"></view>
+                    <input class="price-input-small" type="number" 
+                           value="{{config.priceMatrix.regularCustomer[item]}}" bindblur="updatePrice" data-type="regularCustomer" data-dur="{{item}}" />
+                </view>
+            </block>
+        </view>
+    </view>
+
+    <view class="text-center py-6">
+        <text class="text-xs">Feedback: 1458710681@qq.com</text>
+    </view>
+</view>
