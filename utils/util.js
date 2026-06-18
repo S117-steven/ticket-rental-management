@@ -70,6 +70,40 @@ export const Logic = {
         });
     },
 
+    getPinyinInitial: (str) => {
+        if (!str) return '#';
+        const char = str.charAt(0);
+        if (/[a-zA-Z]/.test(char)) return char.toUpperCase();
+        if (/[0-9]/.test(char)) return '#';
+        
+        const code = char.charCodeAt(0);
+        if (code < 0x4E00 || code > 0x9FFF) return '#';
+
+        const table = [
+            0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,0xBFA6,
+            0xC0AC,0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,0xCBFA,0xCDDA,
+            0xCEF4,0xD1B9,0xD4D1,0xD7FA,0xD8A1,0xD8FE
+        ];
+        const initials = 'ABCDEFGHJKLMNOPQRSTWXYZ';
+        
+        for (let i = 0; i < table.length; i++) {
+            if (code < table[i]) return initials.charAt(i);
+        }
+        return '#';
+    },
+
+    buildCustomerGroups: (users) => {
+        const groups = {};
+        users.forEach(u => {
+            const initial = Logic.getPinyinInitial(u.name || u.phone || '');
+            if (!groups[initial]) groups[initial] = [];
+            groups[initial].push(u);
+        });
+        const letters = Object.keys(groups).sort();
+        const result = letters.map(letter => ({ letter, users: groups[letter] }));
+        return { groups: result, letters };
+    },
+
     getCycleEnd: (startDate) => {
         const d = new Date(startDate);
         d.setDate(d.getDate() + CYCLE_DAYS);

@@ -52,7 +52,11 @@ Component({
         hasReminder: false,
         reminderMinutes: 30,
         isEdit: false,
-        t: {}
+        t: {},
+        customerSortMode: 'alpha',
+        customerGroups: [],
+        indexLetters: [],
+        showIndex: true
     },
 
     methods: {
@@ -140,7 +144,7 @@ Component({
                 'dash_delete', 'dash_delete_confirm', 'dash_success', 'dash_saved',
                 'ord_err_name', 'ord_err_phone', 'ord_err_time', 'ord_err_cycle_start',
                 'ord_err_cycle', 'ord_err_quota', 'ord_err_users', 'ord_err_overlap',
-                'ord_err_freq'
+                'ord_err_freq', 'ord_sort_alpha', 'ord_sort_history'
             ];
             const strings = {};
             keys.forEach(k => strings[k] = t(k, null, lang));
@@ -163,7 +167,7 @@ Component({
             const effectiveOrders = Logic.getEffectiveOrders(app.globalData.orders || []);
             const normalizedQuery = String(query || '').trim().toLowerCase();
 
-            return (app.globalData.users || [])
+            const enriched = (app.globalData.users || [])
                 .map(user => {
                     const orderCount = effectiveOrders.filter(o =>
                         o.userId === user.id &&
@@ -171,28 +175,78 @@ Component({
                         o.startTime <= Logic.getCycleEnd(cycleStart)
                     ).length;
                     const historyCount = orderCount + Logic.getCycleUsageOffset(user, cycleStart);
+                    const initial = Logic.getPinyinInitial(user.name || user.phone || '');
                     return {
                         ...user,
                         historyCount,
+                        initial,
                         historyText: historyCount > 0
                             ? t('ord_customer_history', { count: historyCount }, lang)
                             : t('ord_new_customer', null, lang),
-                        searchText: `${user.name || ''} ${user.phone || ''}`.toLowerCase()
+                        searchText: `${user.name || ''} ${user.phone || ''} ${initial}`.toLowerCase()
                     };
                 })
-                .filter(user => !normalizedQuery || user.searchText.includes(normalizedQuery))
-                .sort((a, b) => {
+                .filter(user => {
+                    if (!normalizedQuery) return true;
+                    return user.searchText.includes(normalizedQuery) ||
+                           user.initial.toLowerCase() === normalizedQuery;
+                });
+
+            if (this.data.customerSortMode === 'history' && !normalizedQuery) {
+                enriched.sort((a, b) => {
                     if (b.historyCount !== a.historyCount) return b.historyCount - a.historyCount;
                     return String(a.name || '').localeCompare(String(b.name || ''));
-                })
-                .slice(0, normalizedQuery ? 20 : 8);
+                });
+            } else {
+                enriched.sort((a, b) => {
+                    if (a.initial !== b.initial) return a.initial.localeCompare(b.initial);
+                    return String(a.name || '').localeCompare(String(b.name || ''));
+                });
+            }
+
+            return enriched;
         },
 
         refreshFilteredUsers(query) {
-            this.setData({
-                users: app.globalData.users || [],
-                filteredUsers: this.getCustomerOptions(query)
-            });
+            const users = app.globalData.users || [];
+            const filtered = this.getCustomerOptions(query);
+            const showGrouped = !query && this.data.customerSortMode === 'alpha';
+            
+            if (showGrouped) {
+                const { groups, letters } = Logic.buildCustomerGroups(filtered);
+                this.setData({
+                    users,
+                    filteredUsers: filtered,
+                    customerGroups: groups,
+                    indexLetters: letters,
+                    showIndex: true
+                });
+            } else {
+                this.setData({
+                    users,
+                    filteredUsers: filtered,
+                    customerGroups: [{ letter: '', users: filtered }],
+                    indexLetters: [],
+                    showIndex: false
+                });
+            }
+        },
+
+        onSortChange(e) {
+            const mode = e.currentTarget.dataset.mode;
+            this.setData({ customerSortMode: mode });
+            this.refreshFilteredUsers(this.data.userQuery);
+        },
+
+        onIndexTap(e) {
+            const letter = e.currentTarget.dataset.letter;
+            const groups = this.data.customerGroups;
+            let scrollOffset = 0;
+            for (const group of groups) {
+                if (group.letter === letter) break;
+                scrollOffset += group.users.length * 50;
+            }
+            this.setData({ customerScrollTop: scrollOffset });
         },
 
         onCustomerSearch(e) {

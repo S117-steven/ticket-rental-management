@@ -44,6 +44,7 @@ export const I18N = {
         ord_err_quota: "本月发送次数已达上限", ord_err_users: "本月独立用户名额已满",
         ord_err_overlap: "该时段票据尚未归还 (时间冲突)", ord_err_freq: "今日已发送过票据 (每日限1次)",
         ord_reminder_title: "添加提醒", ord_reminder_alarm: "添加提醒", ord_reminder_minutes: "提前(分钟)",
+        ord_sort_alpha: "按字母", ord_sort_history: "按历史",
 
         ob_welcome: "欢迎使用月票管家", ob_subtitle: "数据将存储在微信本地缓存中。请完成初始配置。",
         ob_date: "月票激活日期", ob_date_hint: "系统将基于此日期计算30天有效周期。",
@@ -117,6 +118,7 @@ export const I18N = {
         ord_err_quota: "Monthly send limit reached", ord_err_users: "Monthly user limit reached",
         ord_err_overlap: "Ticket not returned (Overlap)", ord_err_freq: "Daily limit reached (1 send/day)",
         ord_reminder_title: "Add Reminder", ord_reminder_alarm: "Set Alarm", ord_reminder_minutes: "Minutes Before",
+        ord_sort_alpha: "A-Z", ord_sort_history: "History",
 
         ob_welcome: "Welcome", ob_subtitle: "Data saved locally. Please setup.",
         ob_date: "Activation Date", ob_date_hint: "30-day cycle calculated from this date.",
@@ -190,6 +192,7 @@ export const I18N = {
         ord_err_quota: "Månadskvot nådd", ord_err_users: "Användargräns nådd",
         ord_err_overlap: "Biljett ej återlämnad", ord_err_freq: "Daglig gräns nådd",
         ord_reminder_title: "Lägg till i kalender", ord_reminder_alarm: "Ställ in larm", ord_reminder_minutes: "Minuter innan",
+        ord_sort_alpha: "A-Ö", ord_sort_history: "Historik",
 
         ob_welcome: "Välkommen", ob_subtitle: "Data sparas lokalt. Vänligen konfigurera.",
         ob_date: "Startdatum", ob_date_hint: "30-dagars cykel beräknas från detta datum.",

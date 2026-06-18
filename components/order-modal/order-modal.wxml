@@ -16,15 +16,40 @@
             <input class="form-input" placeholder="{{t.ord_customer_search_ph}}" value="{{userQuery}}" bindinput="onCustomerSearch" />
           </view>
 
-          <scroll-view scroll-y class="customer-results" wx:if="{{filteredUsers.length > 0}}">
-            <view wx:for="{{filteredUsers}}" wx:key="id" class="customer-result {{item.id === userId ? 'customer-result-active' : ''}}" bindtap="selectCustomer" data-id="{{item.id}}" hover-class="hover-effect">
-              <view class="customer-result-main">
-                <text class="customer-name">{{item.name}}</text>
-                <text class="customer-phone">{{item.phone}}</text>
-              </view>
-              <text class="customer-meta">{{item.historyText}}</text>
+          <view class="sort-bar">
+            <view class="sort-btn {{customerSortMode === 'alpha' ? 'sort-btn-active' : ''}}" bindtap="onSortChange" data-mode="alpha">
+              <text>{{t.ord_sort_alpha}}</text>
             </view>
-          </scroll-view>
+            <view class="sort-btn {{customerSortMode === 'history' ? 'sort-btn-active' : ''}}" bindtap="onSortChange" data-mode="history">
+              <text>{{t.ord_sort_history}}</text>
+            </view>
+          </view>
+
+          <view class="customer-list-wrapper">
+            <scroll-view scroll-y class="customer-results" scroll-top="{{customerScrollTop}}" wx:if="{{filteredUsers.length > 0}}">
+              <block wx:for="{{customerGroups}}" wx:key="letter" wx:for-item="group">
+                <view wx:if="{{group.letter}}" class="group-header">
+                  <text class="group-letter">{{group.letter}}</text>
+                </view>
+                <view wx:for="{{group.users}}" wx:for-item="user" wx:key="id" 
+                      class="customer-result {{user.id === userId ? 'customer-result-active' : ''}}" 
+                      bindtap="selectCustomer" data-id="{{user.id}}" hover-class="hover-effect">
+                  <view class="customer-result-main">
+                    <text class="customer-name">{{user.name}}</text>
+                    <text class="customer-phone">{{user.phone}}</text>
+                  </view>
+                  <text class="customer-meta">{{user.historyText}}</text>
+                </view>
+              </block>
+            </scroll-view>
+
+            <view wx:if="{{showIndex && indexLetters.length > 0}}" class="index-bar">
+              <view wx:for="{{indexLetters}}" wx:key="*this" class="index-item" 
+                    bindtap="onIndexTap" data-letter="{{item}}" hover-class="hover-effect">
+                <text>{{item}}</text>
+              </view>
+            </view>
+          </view>
 
           <view wx:elif="{{userQuery}}" class="empty-result">{{t.ord_no_customer_results}}</view>
         </view>
