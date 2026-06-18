@@ -59,7 +59,19 @@ export const I18N = {
 
         dur_4h: "4小时", dur_8h: "8小时", dur_12h: "12小时", dur_24h: "24小时",
         dur_48h: "48小时", dur_7d: "7天", dur_rem: "剩余全包",
-        dash_cal_save: "保存"
+        dash_cal_save: "保存", dash_cal_title: "门票出租", dash_cal_phone: "电话",
+        dash_copy_btn: "复制", dash_unknown: "未知用户",
+        pay_swish_label: "Swish:", pay_amount_label: "金额:",
+        ob_step1_title: "选择语言", ob_step1_subtitle: "请选择您的首选语言。",
+        ob_limit_exceeded: "超出限制（最多5个名额，15次发送）",
+        ob_onboarding_title: "欢迎使用",
+        set_export: "导出数据", set_import: "导入数据",
+        set_export_success: "数据已复制到剪贴板", set_export_empty: "暂无数据可导出",
+        set_import_confirm: "确定导入数据吗？这将覆盖当前数据。",
+        set_import_success: "数据导入成功", set_import_fail: "数据格式无效",
+        dash_undo: "撤销", dash_order_cancelled: "订单已取消",
+        dash_load_more: "加载更多", dash_cal_reminder: "提醒",
+        ord_now_label: "现在开始"
     },
     en: {
         nav_dashboard: "Home", nav_calendar: "Calendar", nav_settings: "Settings",
@@ -120,7 +132,19 @@ export const I18N = {
 
         dur_4h: "4 Hours", dur_8h: "8 Hours", dur_12h: "12 Hours", dur_24h: "24 Hours",
         dur_48h: "48 Hours", dur_7d: "7 Days", dur_rem: "Remaining",
-        dash_cal_save: "Save"
+        dash_cal_save: "Save", dash_cal_title: "Ticket Rental", dash_cal_phone: "Phone",
+        dash_copy_btn: "Copy", dash_unknown: "Unknown",
+        pay_swish_label: "Swish:", pay_amount_label: "Amount:",
+        ob_step1_title: "Select Language", ob_step1_subtitle: "Please choose your preferred language.",
+        ob_limit_exceeded: "Limit exceeded (Max 5 users, 15 sends)",
+        ob_onboarding_title: "Welcome",
+        set_export: "Export Data", set_import: "Import Data",
+        set_export_success: "Data copied to clipboard", set_export_empty: "No data to export",
+        set_import_confirm: "Import data? This will overwrite current data.",
+        set_import_success: "Data imported", set_import_fail: "Invalid data format",
+        dash_undo: "Undo", dash_order_cancelled: "Order cancelled",
+        dash_load_more: "Load more", dash_cal_reminder: "Reminder",
+        ord_now_label: "Start Now"
     },
     sv: {
         nav_dashboard: "Hem", nav_calendar: "Kalender", nav_settings: "Inställningar",
@@ -181,14 +205,26 @@ export const I18N = {
 
         dur_4h: "4 Timmar", dur_8h: "8 Timmar", dur_12h: "12 Timmar", dur_24h: "24 Timmar",
         dur_48h: "48 Timmar", dur_7d: "7 Dagar", dur_rem: "Resten",
-        dash_cal_save: "Spara"
+        dash_cal_save: "Spara", dash_cal_title: "Biljettuthyrning", dash_cal_phone: "Telefon",
+        dash_copy_btn: "Kopiera", dash_unknown: "Okänd",
+        pay_swish_label: "Swish:", pay_amount_label: "Belopp:",
+        ob_step1_title: "Välj språk", ob_step1_subtitle: "Vänligen välj ditt föredragna språk.",
+        ob_limit_exceeded: "Gräns överskriden (max 5 användare, 15 skickade)",
+        ob_onboarding_title: "Välkommen",
+        set_export: "Exportera data", set_import: "Importera data",
+        set_export_success: "Data kopierad till urklipp", set_export_empty: "Ingen data att exportera",
+        set_import_confirm: "Importera data? Detta skriver över nuvarande data.",
+        set_import_success: "Data importerad", set_import_fail: "Ogiltigt dataformat",
+        dash_undo: "Ångra", dash_order_cancelled: "Bokning avbruten",
+        dash_load_more: "Visa mer", dash_cal_reminder: "Påminnelse",
+        ord_now_label: "Starta nu"
     }
 };
 
 export const t = (key, params, lang = 'zh') => {
     let str = I18N[lang]?.[key] || key;
     if (params) {
-        for (let k in params) str = str.replace(`{${k}}`, params[k]);
+        for (let k in params) str = str.split(`{${k}}`).join(params[k]);
     }
     return str;
 };

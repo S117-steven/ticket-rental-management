@@ -7,6 +7,7 @@ Page({
         config: null,
         isoDate: '',
         DurationType: ['4h', '8h', '12h', '24h', '48h', '7d', 'Remaining'],
+        durationLabels: [],
         t: {}
     },
 
@@ -17,7 +18,9 @@ Page({
     initData() {
         const config = app.globalData.config;
         const isoDate = Logic.formatLocalDate(config.cycleStartDate);
-        this.setData({ config, isoDate });
+        const lang = config.language;
+        const durationLabels = this.data.DurationType.map(d => t(Logic.getDurationI18nKey(d), null, lang));
+        this.setData({ config, isoDate, durationLabels });
         this.updateI18n();
     },
 
@@ -25,24 +28,20 @@ Page({
         const lang = this.data.config.language;
         const keys = [
             'set_title', 'set_lang', 'set_cycle', 'set_renew',
-            'set_price', 'set_save', 'set_feedback', 'ob_th_dur',
-            'ob_th_new', 'ob_th_reg', 'set_renew_confirm'
+            'set_price', 'set_save', 'ob_th_dur',
+            'ob_th_new', 'ob_th_reg', 'set_renew_confirm', 'set_renew_success',
+            'set_export', 'set_import', 'set_export_success', 'set_export_empty',
+            'set_import_confirm', 'set_import_success', 'set_import_fail',
+            'set_date', 'set_date_hint', 'set_swish', 'set_swish_hint'
         ];
         const strings = {};
         keys.forEach(k => strings[k] = t(k, null, lang));
+        strings.set_feedback = t('set_feedback', { email: '1458710681@qq.com' }, lang);
         this.setData({ t: strings });
         wx.setNavigationBarTitle({ title: t('nav_settings', null, lang) });
     },
 
-    setLanguage(e) {
-        const lang = this.data.config.language;
-        const newLang = lang === 'en' ? 'zh' : (lang === 'zh' ? 'sv' : 'en');
-        // Or select logic, here toggle for simplicity or use picker in wxml
-        // Actually the picker in wxml is better.
-    },
-
     onLangChange(e) {
-        // Picker change
         const langs = ['zh', 'en', 'sv'];
         const idx = parseInt(e.detail.value);
         const newLang = langs[idx];
@@ -70,14 +69,65 @@ Page({
 
 
     updatePrice(e) {
-        const type = e.currentTarget.dataset.type; // 'newCustomer' or 'regularCustomer'
+        const type = e.currentTarget.dataset.type;
         const dur = e.currentTarget.dataset.dur;
-        const val = parseInt(e.detail.value) || 0;
+        let val = parseInt(e.detail.value) || 0;
+        if (val < 0) val = 0;
+        if (val > 9999) val = 9999;
 
         const newConfig = { ...this.data.config, priceMatrix: JSON.parse(JSON.stringify(this.data.config.priceMatrix)) };
         newConfig.priceMatrix[type][dur] = val;
         app.updateConfig(newConfig);
         this.setData({ config: newConfig });
+    },
+
+    exportData() {
+        const data = {
+            users: app.globalData.users || [],
+            orders: app.globalData.orders || [],
+            config: app.globalData.config
+        };
+        const json = JSON.stringify(data);
+        if (!json || json === '{}') {
+            return wx.showToast({ title: this.data.t.set_export_empty, icon: 'none' });
+        }
+        wx.setClipboardData({
+            data: json,
+            success: () => {
+                wx.showToast({ title: this.data.t.set_export_success, icon: 'success' });
+            }
+        });
+    },
+
+    importData() {
+        const lang = this.data.config.language;
+        wx.showModal({
+            title: this.data.t.set_import,
+            content: this.data.t.set_import_confirm,
+            success: (res) => {
+                if (res.confirm) {
+                    wx.getClipboardData({
+                        success: (clipRes) => {
+                            try {
+                                const data = JSON.parse(clipRes.data);
+                                if (!data.config || !data.users || !data.orders) {
+                                    throw new Error('Invalid format');
+                                }
+                                app.globalData.users = data.users;
+                                app.globalData.orders = data.orders;
+                                app.updateConfig(data.config);
+                                wx.setStorageSync('tm_users', data.users);
+                                wx.setStorageSync('tm_orders', data.orders);
+                                this.initData();
+                                wx.showToast({ title: this.data.t.set_import_success, icon: 'success' });
+                            } catch (e) {
+                                wx.showToast({ title: this.data.t.set_import_fail, icon: 'none' });
+                            }
+                        }
+                    });
+                }
+            }
+        });
     },
 
     renewTicket() {
@@ -96,7 +146,7 @@ Page({
                     };
                     app.updateConfig(newConfig);
                     this.initData();
-                    wx.showToast({ title: 'Renewed', icon: 'success' });
+                    wx.showToast({ title: this.data.t.set_renew_success, icon: 'success' });
                 }
             }
         });

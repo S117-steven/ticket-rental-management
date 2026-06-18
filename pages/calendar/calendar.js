@@ -8,11 +8,16 @@ Page({
         t: {},
         showOrderModal: false,
         editingOrder: null,
-        presetDate: ''
+        presetDate: '',
+        cycleOffset: 0,
+        _dirty: true
     },
 
     onShow() {
-        this.initData();
+        if (this.data._dirty) {
+            this.initData();
+            this.data._dirty = false;
+        }
     },
 
     onPullDownRefresh() {
@@ -45,10 +50,11 @@ Page({
         const lang = config.language;
         const nowTs = Date.now();
         const days = [];
+        const offset = this.data.cycleOffset || 0;
 
         for (let i = 0; i < 30; i++) {
             const d = new Date(config.cycleStartDate);
-            d.setDate(d.getDate() + i);
+            d.setDate(d.getDate() + i + offset * 30);
             const dateTs = d.getTime();
             const dateValue = Logic.formatLocalDate(d);
             const isToday = Logic.isSameDay(dateTs, nowTs);
@@ -121,7 +127,7 @@ Page({
         const orderId = e.currentTarget.dataset.orderId;
         const dateValue = e.currentTarget.dataset.date;
 
-        if (orderId && type !== 'occupied') {
+        if (orderId) {
             const order = (app.globalData.orders || []).find(o => o.id === orderId);
             if (order) {
                 this.setData({ showOrderModal: true, editingOrder: order, presetDate: '' });
@@ -136,7 +142,23 @@ Page({
 
     onOrderModalClose() {
         this.setData({ showOrderModal: false, editingOrder: null, presetDate: '' });
+        this.data._dirty = true;
         this.initData();
+    },
+
+    prevCycle() {
+        this.setData({ cycleOffset: this.data.cycleOffset - 1 });
+        this.renderCalendar();
+    },
+
+    nextCycle() {
+        this.setData({ cycleOffset: this.data.cycleOffset + 1 });
+        this.renderCalendar();
+    },
+
+    resetCycle() {
+        this.setData({ cycleOffset: 0 });
+        this.renderCalendar();
     },
 
     onDeleteOrder(e) {

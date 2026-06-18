@@ -42,18 +42,26 @@
             </view>
             <block wx:for="{{DurationType}}" wx:key="*this">
                 <view class="price-row">
-                    <view class="flex-1 text-sm font-medium">{{item}}</view>
-                    <input class="price-input-small" type="number" 
+                    <view class="flex-1 text-sm font-medium">{{durationLabels[index]}}</view>
+                    <input class="price-input-small" type="number" min="0" max="9999"
                            value="{{config.priceMatrix.newCustomer[item]}}" bindblur="updatePrice" data-type="newCustomer" data-dur="{{item}}" />
                     <view style="width: 16rpx;"></view>
-                    <input class="price-input-small" type="number" 
+                    <input class="price-input-small" type="number" min="0" max="9999"
                            value="{{config.priceMatrix.regularCustomer[item]}}" bindblur="updatePrice" data-type="regularCustomer" data-dur="{{item}}" />
                 </view>
             </block>
         </view>
     </view>
 
+    <view class="setting-card">
+        <view class="setting-title mb-4">{{t.set_export}}</view>
+        <view class="flex gap-4">
+            <button class="btn btn-secondary flex-1" bindtap="exportData" hover-class="hover-effect">{{t.set_export}}</button>
+            <button class="btn btn-secondary flex-1" bindtap="importData" hover-class="hover-effect">{{t.set_import}}</button>
+        </view>
+    </view>
+
     <view class="text-center py-6">
-        <text class="text-xs">Feedback: 1458710681@qq.com</text>
+        <text class="text-xs">{{t.set_feedback}}</text>
     </view>
 </view>

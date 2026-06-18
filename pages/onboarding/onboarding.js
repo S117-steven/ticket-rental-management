@@ -13,7 +13,8 @@ Page({
         prices: null,
         lang: 'zh',
         t: {},
-        DurationType: ['4h', '8h', '12h', '24h', '48h', '7d', 'Remaining']
+        DurationType: ['4h', '8h', '12h', '24h', '48h', '7d', 'Remaining'],
+        durationLabels: []
     },
 
     onLoad() {
@@ -29,12 +30,6 @@ Page({
     },
 
     updateI18n() {
-        // Generate static translations map for the view
-        // In a real mp we might use a helper in wxml wxs, but for now lets just bind strings or use a simple method
-        // To simplify migration, I'll bind the current language strings to data.t
-        // But since we have a dynamic t function, I'll just map the keys I need or expose t in a simpler way.
-        // Actually, binding a 'strings' object is better.
-        // Let's rely on data binding.
         const lang = this.data.lang;
         const keys = [
             'ob_welcome', 'ob_subtitle', 'ob_date', 'ob_date_hint', 'ob_history',
@@ -42,21 +37,23 @@ Page({
             'ob_step2_title', 'ob_tenant_idx', 'ob_assigned', 'ob_name_ph', 'ob_phone_ph',
             'ob_price_title', 'ob_th_dur', 'ob_th_new', 'ob_th_reg', 'ob_finish',
             'ob_err_sends', 'ob_err_match', 'ob_err_fill',
-            'ob_tenant_label', 'ob_rented_count_label'
+            'ob_tenant_label', 'ob_rented_count_label',
+            'ob_step1_title', 'ob_step1_subtitle', 'ob_limit_exceeded', 'ob_onboarding_title'
         ];
         const strings = {};
         keys.forEach(k => strings[k] = t(k, null, lang));
-        this.setData({ t: strings });
+        const durationLabels = this.data.DurationType.map(d => t(Logic.getDurationI18nKey(d), null, lang));
+        this.setData({ t: strings, durationLabels });
 
-        // Set Title
-        wx.setNavigationBarTitle({ title: t('ob_welcome', null, lang) });
+        wx.setNavigationBarTitle({ title: t('ob_onboarding_title', null, lang) });
     },
 
     setLanguage(e) {
         const lang = e.currentTarget.dataset.lang;
-        this.setData({ lang, step: 2 });
+        this.setData({ lang });
         this.updateI18n();
         app.updateConfig({ ...app.globalData.config, language: lang });
+        this.setData({ step: 2 });
     },
 
     bindDateChange(e) {
@@ -81,7 +78,7 @@ Page({
                 return wx.showToast({ title: t('ob_err_sends', null, lang), icon: 'none' });
             }
             if (users > 5 || sends > 15) {
-                return wx.showToast({ title: 'Limit exceeded (Max 5 users, 15 sends)', icon: 'none' });
+                return wx.showToast({ title: t('ob_limit_exceeded', null, lang), icon: 'none' });
             }
 
             // Init tenants
@@ -134,7 +131,9 @@ Page({
 
     prevStep() {
         const current = this.data.step;
-        if (current === 4) {
+        if (current === 2) {
+            this.setData({ step: 1 });
+        } else if (current === 4) {
             this.setData({ step: this.data.hasHistory ? 3 : 2 });
         } else {
             this.setData({ step: current - 1 });

@@ -90,7 +90,7 @@
       </view>
       
       <scroll-view wx:else scroll-y class="recent-scroll-view">
-        <view wx:for="{{recentOrders}}" wx:key="id" class="p-4 border-b last-border-0" bindtap="onEditOrder" data-order="{{item}}">
+        <view wx:for="{{displayOrders}}" wx:key="id" class="p-4 border-b last-border-0" bindtap="onEditOrder" data-order="{{item}}">
           <view class="flex items-center gap-4">
             <!-- Icon -->
             <view class="bg-green-50 text-green-600 rounded-full w-10 h-10 flex items-center justify-center text-xs">
@@ -107,13 +107,16 @@
                 <view class="flex items-center gap-2" catchtap="noop">
                   <text class="text-xs">{{item.userParams.name}}</text>
                   <view class="bg-slate-100 px-2 py-1 rounded text-xs text-blue-600 font-bold flex items-center gap-1" catchtap="onCopyPhone" data-phone="{{item.userParams.phone}}" hover-class="hover-effect">
-                    <text>📄 复制</text>
+                    <text>{{t.dash_copy_btn}}</text>
                   </view>
                 </view>
                 <text class="text-xs">{{item.startTimeStr}}</text>
               </view>
             </view>
           </view>
+        </view>
+        <view wx:if="{{hasMoreOrders}}" class="p-4 text-center" bindtap="loadMoreOrders" hover-class="hover-effect">
+          <text class="text-blue-600 font-bold text-sm">{{t.dash_load_more}}</text>
         </view>
       </scroll-view>
     </view>

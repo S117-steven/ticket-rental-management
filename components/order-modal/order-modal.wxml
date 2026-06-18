@@ -67,7 +67,7 @@
         <text class="section-title">{{t.ord_duration}}</text>
         <picker range="{{DurationType}}" bindchange="onDurationChange" class="custom-picker">
           <view class="picker-button" hover-class="hover-effect">
-            <text>{{duration}}</text>
+            <text>{{durationLabel}}</text>
             <text class="text-sm">></text>
           </view>
         </picker>

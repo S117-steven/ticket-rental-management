@@ -45,6 +45,7 @@ Component({
         date: '',
         time: '',
         duration: '24h',
+        durationLabel: '24h',
         price: 0,
         valid: false,
         reason: '',
@@ -72,6 +73,7 @@ Component({
 
         initData() {
             const { date, time } = this.getDefaultDateTime();
+            const lang = app.globalData.config.language;
             this.updateI18n();
             this.setData({
                 users: app.globalData.users || [],
@@ -82,6 +84,7 @@ Component({
                 date,
                 time,
                 duration: '24h',
+                durationLabel: t('dur_24h', null, lang),
                 price: 0,
                 valid: false,
                 reason: '',
@@ -102,6 +105,8 @@ Component({
             const time = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
             const name = data.userParams?.name || '';
             const phone = data.userParams?.phone || '';
+            const lang = app.globalData.config.language;
+            const dur = data.durationType || '24h';
 
             this.updateI18n();
             this.setData({
@@ -112,7 +117,8 @@ Component({
                 phone,
                 date,
                 time,
-                duration: data.durationType || '24h',
+                duration: dur,
+                durationLabel: t(Logic.getDurationI18nKey(dur), null, lang),
                 hasReminder: false,
                 reminderMinutes: 30,
                 isEdit: true
@@ -235,7 +241,10 @@ Component({
 
         onDurationChange(e) {
             const idx = e.detail.value;
-            this.setData({ duration: this.data.DurationType[idx] }, () => this.validate());
+            const dur = this.data.DurationType[idx];
+            const lang = app.globalData.config.language;
+            const durLabel = t(Logic.getDurationI18nKey(dur), null, lang);
+            this.setData({ duration: dur, durationLabel: durLabel }, () => this.validate());
         },
 
         toggleReminder(e) {
@@ -347,13 +356,15 @@ Component({
             const endTs = Logic.getCalculatedEndTime(startTs, duration, cycleEnd);
             const durationStr = t(Logic.getDurationI18nKey(duration), null, lang);
             const titlePrefix = t('cal_event_title', null, lang);
+            const phoneLabel = t('dash_cal_phone', null, lang);
+            const locationLabel = t('cal_edit_order', null, lang);
 
             wx.addPhoneCalendar({
                 title: `${titlePrefix}: ${name} (${durationStr})`,
                 startTime: Math.floor(startTs / 1000),
                 endTime: Math.floor(endTs / 1000),
-                description: `Client Phone: ${phone}`,
-                location: 'Online',
+                description: `${phoneLabel}: ${phone}`,
+                location: locationLabel,
                 alarm: true,
                 alarmOffset,
                 success: () => {

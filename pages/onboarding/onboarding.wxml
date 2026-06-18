@@ -3,8 +3,8 @@
   <!-- Step 1: Language -->
   <view wx:if="{{step === 1}}" class="flex flex-col justify-center items-center gap-8 py-20 px-6">
     <view class="text-center">
-      <view class="text-xl font-bold mb-2">Select Language</view>
-      <view class="text-sm">Please choose your preferred language.</view>
+      <view class="text-xl font-bold mb-2">{{t.ob_step1_title || 'Select Language'}}</view>
+      <view class="text-sm">{{t.ob_step1_subtitle || 'Please choose your preferred language.'}}</view>
     </view>
     <view class="w-full flex flex-col gap-4">
       <button class="btn w-full px-6 bg-white border flex justify-between items-center" bindtap="setLanguage" data-lang="en" hover-class="hover-effect">
@@ -105,11 +105,11 @@
         </view>
         <block wx:for="{{DurationType}}" wx:key="*this">
           <view class="flex items-center py-2 border-b last:border-0">
-            <view class="flex-1 text-sm font-medium">{{item}}</view>
-            <input style="width: 140rpx; height: 72rpx;" class="bg-slate-50 border rounded-xl text-center" type="number" 
+            <view class="flex-1 text-sm font-medium">{{durationLabels[index]}}</view>
+            <input style="width: 140rpx; height: 72rpx;" class="bg-slate-50 border rounded-xl text-center" type="number" min="0" max="9999"
                    value="{{prices.newCustomer[item]}}" bindinput="updatePrice" data-type="newCustomer" data-dur="{{item}}" />
             <view style="width: 16rpx;"></view>
-            <input style="width: 140rpx; height: 72rpx;" class="bg-slate-50 border rounded-xl text-center" type="number" 
+            <input style="width: 140rpx; height: 72rpx;" class="bg-slate-50 border rounded-xl text-center" type="number" min="0" max="9999"
                    value="{{prices.regularCustomer[item]}}" bindinput="updatePrice" data-type="regularCustomer" data-dur="{{item}}" />
           </view>
         </block>

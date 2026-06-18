@@ -7,6 +7,9 @@ Page({
         stats: null,
         orders: [],
         recentOrders: [],
+        displayOrders: [],
+        orderLimit: 20,
+        hasMoreOrders: false,
         nextOrderText: '',
         nextOrderSub: '',
         nextOrderRaw: null,
@@ -18,11 +21,15 @@ Page({
         paymentPrice: 0,
         showPayment: false,
         showUserDetailsModal: false,
-        userDetails: []
+        userDetails: [],
+        _dirty: true
     },
 
     onShow() {
-        this.initData();
+        if (this.data._dirty) {
+            this.initData();
+            this.data._dirty = false;
+        }
     },
 
     onPullDownRefresh() {
@@ -69,10 +76,11 @@ Page({
         const trans = strings || this.data.t;
         const orders = app.globalData.orders;
         const config = app.globalData.config;
+        const lang = config.language;
         const stats = Logic.calculateStats(orders, config, app.globalData.users);
         const now = Date.now();
 
-        // Recent Orders - No more slice, show all
+        // Recent Orders - with pagination
         const recentOrders = [...orders]
             .sort((a, b) => b.startTime - a.startTime)
             .map((o, idx) => ({
@@ -81,9 +89,13 @@ Page({
                 endTimeStr: this.formatTime(o.endTime),
                 displayStatus: Logic.getDisplayStatus(o, now),
                 statusBadgeClass: this.getStatusClass(Logic.getDisplayStatus(o, now)),
-                orderNumStr: t('dash_order_num', { n: orders.length - idx }, app.globalData.config.language),
+                orderNumStr: t('dash_order_num', { n: orders.length - idx }, lang),
                 statusLabel: trans[`status_${Logic.getDisplayStatus(o, now).toLowerCase()}`] || Logic.getDisplayStatus(o, now)
             }));
+
+        const orderLimit = this.data.orderLimit;
+        const displayOrders = recentOrders.slice(0, orderLimit);
+        const hasMoreOrders = recentOrders.length > orderLimit;
 
         // User Details Details for Modal
         const userMap = {};
@@ -97,7 +109,7 @@ Page({
             const uid = o.userId;
             if (!userMap[uid]) {
                 userMap[uid] = {
-                    name: o.userParams.name || 'Unknown',
+                    name: o.userParams.name || t('dash_unknown', null, lang),
                     phone: o.userParams.phone || '',
                     count: 0,
                     totalAmount: 0
@@ -112,7 +124,7 @@ Page({
             if (offsetCount <= 0) return;
             if (!userMap[user.id]) {
                 userMap[user.id] = {
-                    name: user.name || 'Unknown',
+                    name: user.name || t('dash_unknown', null, lang),
                     phone: user.phone || '',
                     count: 0,
                     totalAmount: 0
@@ -121,12 +133,10 @@ Page({
             userMap[user.id].count += offsetCount;
         });
 
-        const lang = app.globalData.config.language;
         const userDetails = Object.values(userMap)
             .sort((a, b) => b.totalAmount - a.totalAmount)
             .map(u => {
                 let countStr = t('dash_order_count', { n: u.count }, lang);
-                // Simple pluralization fix for English
                 if (lang === 'en' && u.count === 1) {
                     countStr = countStr.replace('Orders', 'Order');
                 }
@@ -155,6 +165,8 @@ Page({
             stats,
             orders,
             recentOrders,
+            displayOrders,
+            hasMoreOrders,
             userDetails,
             nextOrderText,
             nextOrderSub,
@@ -166,6 +178,13 @@ Page({
         this.setData({
             showUserDetailsModal: !this.data.showUserDetailsModal
         });
+    },
+
+    loadMoreOrders() {
+        this.setData({
+            orderLimit: this.data.orderLimit + 20
+        });
+        this.calculateStats();
     },
 
     formatTime(ts) {
@@ -200,7 +219,8 @@ Page({
 
     onOrderModalClose() {
         this.setData({ showOrderModal: false, editingOrder: null });
-        this.initData(); // Refresh data
+        this.data._dirty = true;
+        this.initData();
     },
 
     onDeleteOrder(e) {
@@ -211,8 +231,15 @@ Page({
         });
         app.globalData.orders = orders;
         wx.setStorageSync('tm_orders', orders);
+        this.data._dirty = true;
         this.initData();
-        wx.showToast({ title: this.data.t.dash_success, icon: 'success' });
+
+        const lang = app.globalData.config.language;
+        wx.showToast({
+            title: t('dash_order_cancelled', null, lang),
+            icon: 'success',
+            duration: 3000
+        });
     },
 
     onCopyPhone(e) {
@@ -231,18 +258,19 @@ Page({
     openPayment(e) {
         const price = e.currentTarget.dataset.price;
         const swishNumber = app.globalData.config.swishNumber;
+        const lang = app.globalData.config.language;
 
         if (!swishNumber) {
             return wx.showToast({ title: this.data.t.pay_err_no_phone, icon: 'none' });
         }
 
-        // In MP, we can't show a custom modal with QR easily without a component, but simplest is a modal with text
-        // Or we can just copy the number and amount?
-        // Let's use a simple ActionSheet or Modal
+        const swishLabel = t('pay_swish_label', null, lang);
+        const amountLabel = t('pay_amount_label', null, lang);
+
         wx.showModal({
             title: this.data.t.pay_title,
-            content: `${this.data.t.pay_scan}\nSwish: ${swishNumber}\nAmount: ${price} kr`,
-            confirmText: this.data.t.pay_save, // "Copy" actually
+            content: `${this.data.t.pay_scan}\n${swishLabel} ${swishNumber}\n${amountLabel} ${price} kr`,
+            confirmText: this.data.t.pay_save,
             cancelText: 'OK',
             success: (res) => {
                 if (res.confirm) {
@@ -254,18 +282,21 @@ Page({
     },
 
     saveCalendar(e) {
-        // wx.addPhoneCalendar 
         const orderId = e.currentTarget.dataset.id;
         const order = this.data.orders.find(o => o.id === orderId);
         if (!order) return;
 
+        const lang = app.globalData.config.language;
+        const titlePrefix = t('dash_cal_title', null, lang);
+        const phoneLabel = t('dash_cal_phone', null, lang);
+
         wx.addPhoneCalendar({
-            title: `Ticket Rental: ${order.userParams.name}`,
+            title: `${titlePrefix}: ${order.userParams.name}`,
             startTime: order.startTime / 1000,
             endTime: order.endTime / 1000,
-            description: `Phone: ${order.userParams.phone}`,
-            success: () => wx.showToast({ title: 'Saved', icon: 'success' }),
-            fail: (err) => wx.showToast({ title: 'Failed', icon: 'none' })
+            description: `${phoneLabel}: ${order.userParams.phone}`,
+            success: () => wx.showToast({ title: t('dash_saved', null, lang), icon: 'success' }),
+            fail: () => wx.showToast({ title: t('dash_saved', null, lang), icon: 'none' })
         });
     },
 
