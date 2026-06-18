@@ -149,11 +149,13 @@ Page({
 
         activeTenants.forEach(t => {
             const uid = Logic.uuid();
+            const name = t.name.trim();
             const user = {
                 id: uid,
-                name: t.name.trim(),
+                name: name,
                 phone: t.phone.trim(),
                 totalContribution: 0,
+                pinyinInitial: Logic.generatePinyinInitial(name),
                 cycleUsageOffset: {
                     cycleId: startTs,
                     sends: Math.max(0, parseInt(t.count, 10) || 0)

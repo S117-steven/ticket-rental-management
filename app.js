@@ -1,4 +1,4 @@
-import { DEFAULT_PRICE_MATRIX } from './utils/util';
+import { DEFAULT_PRICE_MATRIX, Logic } from './utils/util';
 
 App({
   globalData: {
@@ -13,7 +13,7 @@ App({
   },
 
   initData() {
-    const users = wx.getStorageSync('tm_users') || [];
+    let users = wx.getStorageSync('tm_users') || [];
     const orders = wx.getStorageSync('tm_orders') || [];
     const config = wx.getStorageSync('tm_config') || {
       isInitialized: false,
@@ -23,6 +23,18 @@ App({
       initialUsageOffset: { sends: 0, users: 0, cycleId: 0 },
       swishNumber: ''
     };
+
+    let needSaveUsers = false;
+    users = users.map(u => {
+      if (!u.pinyinInitial) {
+        needSaveUsers = true;
+        return { ...u, pinyinInitial: Logic.generatePinyinInitial(u.name) };
+      }
+      return u;
+    });
+    if (needSaveUsers) {
+      wx.setStorageSync('tm_users', users);
+    }
 
     this.globalData.users = users;
     this.globalData.orders = orders;

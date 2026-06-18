@@ -177,7 +177,7 @@ Component({
                         o.startTime <= Logic.getCycleEnd(cycleStart)
                     ).length;
                     const historyCount = orderCount + Logic.getCycleUsageOffset(user, cycleStart);
-                    const initial = Logic.getPinyinInitial(user.name || user.phone || '');
+                    const initial = user.pinyinInitial || Logic.getPinyinInitial(user.name || user.phone || '');
                     return {
                         ...user,
                         historyCount,
@@ -409,9 +409,10 @@ Component({
             const endTs = Logic.getCalculatedEndTime(startTs, duration, cycleEnd);
             const now = Date.now();
             const existingUser = this.resolveExistingUser();
+            const pinyinInitial = Logic.generatePinyinInitial(trimmedName);
             const userToSave = existingUser
-                ? { ...existingUser, name: trimmedName, phone: trimmedPhone }
-                : { id: Logic.uuid(), name: trimmedName, phone: trimmedPhone, totalContribution: 0 };
+                ? { ...existingUser, name: trimmedName, phone: trimmedPhone, pinyinInitial }
+                : { id: Logic.uuid(), name: trimmedName, phone: trimmedPhone, totalContribution: 0, pinyinInitial };
 
             app.saveUser(userToSave);
 
