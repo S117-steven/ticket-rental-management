@@ -57,7 +57,8 @@ Component({
         customerGroups: [],
         indexLetters: [],
         showIndex: true,
-        showCustomerPicker: false
+        showCustomerPicker: false,
+        activeLetter: ''
     },
 
     methods: {
@@ -247,7 +248,28 @@ Component({
                 if (group.letter === letter) break;
                 scrollOffset += group.users.length * 50;
             }
-            this.setData({ customerScrollTop: scrollOffset });
+            this.setData({ customerScrollTop: scrollOffset, activeLetter: letter });
+        },
+
+        onCustomerScroll(e) {
+            const scrollTop = e.detail.scrollTop;
+            const groups = this.data.customerGroups;
+            let currentLetter = '';
+            let accumulated = 0;
+            
+            for (const group of groups) {
+                if (!group.letter) continue;
+                const groupHeight = group.users.length * 50;
+                if (scrollTop < accumulated + groupHeight) {
+                    currentLetter = group.letter;
+                    break;
+                }
+                accumulated += groupHeight;
+            }
+            
+            if (currentLetter && currentLetter !== this.data.activeLetter) {
+                this.setData({ activeLetter: currentLetter });
+            }
         },
 
         onCustomerSearch(e) {

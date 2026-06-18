@@ -118,9 +118,9 @@
       </view>
 
       <view class="customer-list-wrapper">
-        <scroll-view scroll-y class="customer-results-full" scroll-top="{{customerScrollTop}}">
+        <scroll-view scroll-y class="customer-results-full" scroll-top="{{customerScrollTop}}" bindscroll="onCustomerScroll" scroll-into-view="{{scrollIntoLetter}}">
           <block wx:for="{{customerGroups}}" wx:key="letter" wx:for-item="group">
-            <view wx:if="{{group.letter}}" class="group-header">
+            <view wx:if="{{group.letter}}" class="group-header" id="group-{{group.letter}}">
               <text class="group-letter">{{group.letter}}</text>
             </view>
             <view wx:for="{{group.users}}" wx:for-item="user" wx:key="id" 
@@ -137,7 +137,8 @@
         </scroll-view>
 
         <view wx:if="{{showIndex && indexLetters.length > 0}}" class="index-bar">
-          <view wx:for="{{indexLetters}}" wx:key="*this" class="index-item" 
+          <view wx:for="{{indexLetters}}" wx:key="*this" 
+                class="index-item {{item === activeLetter ? 'index-item-active' : ''}}" 
                 bindtap="onIndexTap" data-letter="{{item}}" hover-class="hover-effect">
             <text>{{item}}</text>
           </view>
