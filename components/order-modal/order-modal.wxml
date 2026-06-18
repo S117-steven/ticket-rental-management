@@ -51,7 +51,7 @@
             </view>
           </view>
 
-          <view wx:elif="{{userQuery}}" class="empty-result">{{t.ord_no_customer_results}}</view>
+          <view wx:if="{{filteredUsers.length === 0 && userQuery}}" class="empty-result">{{t.ord_no_customer_results}}</view>
         </view>
 
         <view wx:if="{{userId}}" class="info-badge">
