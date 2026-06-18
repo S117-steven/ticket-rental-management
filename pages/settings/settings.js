@@ -8,7 +8,10 @@ Page({
         isoDate: '',
         DurationType: ['4h', '8h', '12h', '24h', '48h', '7d', 'Remaining'],
         durationLabels: [],
-        t: {}
+        t: {},
+        users: [],
+        editingUser: null,
+        showEditModal: false
     },
 
     onShow() {
@@ -20,7 +23,8 @@ Page({
         const isoDate = Logic.formatLocalDate(config.cycleStartDate);
         const lang = config.language;
         const durationLabels = this.data.DurationType.map(d => t(Logic.getDurationI18nKey(d), null, lang));
-        this.setData({ config, isoDate, durationLabels });
+        const users = app.globalData.users || [];
+        this.setData({ config, isoDate, durationLabels, users });
         this.updateI18n();
     },
 
@@ -32,7 +36,9 @@ Page({
             'ob_th_new', 'ob_th_reg', 'set_renew_confirm', 'set_renew_success',
             'set_export', 'set_import', 'set_export_success', 'set_export_empty',
             'set_import_confirm', 'set_import_success', 'set_import_fail',
-            'set_date', 'set_date_hint', 'set_swish', 'set_swish_hint'
+            'set_date', 'set_date_hint', 'set_swish', 'set_swish_hint',
+            'set_users_title', 'set_no_users', 'set_edit_user', 'set_user_name',
+            'set_user_phone', 'set_save_user', 'set_delete_user_confirm'
         ];
         const strings = {};
         keys.forEach(k => strings[k] = t(k, null, lang));
@@ -150,5 +156,79 @@ Page({
                 }
             }
         });
-    }
+    },
+
+    editUser(e) {
+        const id = e.currentTarget.dataset.id;
+        const user = (app.globalData.users || []).find(u => u.id === id);
+        if (!user) return;
+        
+        this.setData({
+            editingUser: { ...user },
+            showEditModal: true
+        });
+    },
+
+    onUserNameInput(e) {
+        const editingUser = this.data.editingUser;
+        editingUser.name = e.detail.value;
+        this.setData({ editingUser });
+    },
+
+    onUserPhoneInput(e) {
+        const editingUser = this.data.editingUser;
+        editingUser.phone = e.detail.value;
+        this.setData({ editingUser });
+    },
+
+    saveUser() {
+        const user = this.data.editingUser;
+        if (!user || !user.name) {
+            wx.showToast({ title: '请输入姓名', icon: 'none' });
+            return;
+        }
+
+        const users = app.globalData.users;
+        const idx = users.findIndex(u => u.id === user.id);
+        if (idx >= 0) {
+            user.pinyinInitial = Logic.generatePinyinInitial(user.name);
+            users[idx] = { ...users[idx], ...user };
+            app.globalData.users = users;
+            wx.setStorageSync('tm_users', users);
+        }
+
+        this.setData({
+            showEditModal: false,
+            editingUser: null,
+            users: app.globalData.users
+        });
+        wx.showToast({ title: '已保存', icon: 'success' });
+    },
+
+    cancelEditUser() {
+        this.setData({
+            showEditModal: false,
+            editingUser: null
+        });
+    },
+
+    deleteUser(e) {
+        const id = e.currentTarget.dataset.id;
+        wx.showModal({
+            title: '确认删除',
+            content: this.data.t.set_delete_user_confirm || '确定要删除这个用户吗？',
+            success: (res) => {
+                if (res.confirm) {
+                    let users = app.globalData.users || [];
+                    users = users.filter(u => u.id !== id);
+                    app.globalData.users = users;
+                    wx.setStorageSync('tm_users', users);
+                    this.setData({ users });
+                    wx.showToast({ title: '已删除', icon: 'success' });
+                }
+            }
+        });
+    },
+
+    noop() {}
 });

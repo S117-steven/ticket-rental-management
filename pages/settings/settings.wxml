@@ -61,7 +61,50 @@
         </view>
     </view>
 
+    <view class="setting-card">
+        <view class="setting-title mb-4">👥 {{t.set_users_title}}</view>
+        <view class="user-list">
+            <view wx:for="{{users}}" wx:key="id" class="user-item">
+                <view class="user-info">
+                    <text class="user-name">{{item.name}}</text>
+                    <text class="user-phone">{{item.phone}}</text>
+                </view>
+                <view class="user-actions">
+                    <text class="edit-btn" bindtap="editUser" data-id="{{item.id}}">✏️</text>
+                    <text class="delete-btn" bindtap="deleteUser" data-id="{{item.id}}">🗑️</text>
+                </view>
+            </view>
+            <view wx:if="{{users.length === 0}}" class="empty-users">
+                <text>{{t.set_no_users}}</text>
+            </view>
+        </view>
+    </view>
+
     <view class="text-center py-6">
         <text class="text-xs">{{t.set_feedback}}</text>
+    </view>
+</view>
+
+<!-- Edit User Modal -->
+<view class="modal-mask" wx:if="{{showEditModal}}" bindtap="cancelEditUser">
+    <view class="modal-container" catchtap="noop">
+        <view class="modal-header">
+            <text class="text-lg">{{t.set_edit_user}}</text>
+            <view class="close-btn" bindtap="cancelEditUser">x</view>
+        </view>
+        <view class="modal-body">
+            <view class="form-group">
+                <text class="form-label">{{t.set_user_name}}</text>
+                <input class="form-input" value="{{editingUser.name}}" bindinput="onUserNameInput" placeholder="{{t.set_user_name}}" />
+            </view>
+            <view class="form-group">
+                <text class="form-label">{{t.set_user_phone}}</text>
+                <input class="form-input" value="{{editingUser.phone}}" bindinput="onUserPhoneInput" placeholder="{{t.set_user_phone}}" type="number" />
+            </view>
+        </view>
+        <view class="modal-footer">
+            <button class="btn btn-secondary" bindtap="cancelEditUser">{{t.ord_cancel}}</button>
+            <button class="btn btn-primary" bindtap="saveUser">{{t.set_save_user}}</button>
+        </view>
     </view>
 </view>

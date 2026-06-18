@@ -58,23 +58,14 @@ export const DURATION_MS = {
 // 查找复杂度：O(1) 哈希查找
 // ─────────────────────────────────────────────────────────────────────────────
 const PINYIN_INITIAL_MAP = (function () {
-    const lookup = 'YDCNESLBGKHZJSWFTMQZXPR';
     const pyInitials = 'ABCDEFGHJKLMNOPQRSTWXYZ';
-    
-    const first = '阿八擦达饿发噶哈级卡拉吗那哦啪七然撒他瓦西雅杂'.split('');
+    const lookup = 'YDCNESLBGKHZJSWFTMQZXPR';
     
     const map = Object.create(null);
     for (let i = 0x4E00; i <= 0x9FFF; i++) {
-        const char = String.fromCharCode(i);
-        let initial = '#';
-        for (let j = 0; j < first.length; j++) {
-            if (i <= first[j].charCodeAt(0)) {
-                initial = pyInitials[j];
-                break;
-            }
-        }
-        if (initial === '#') initial = 'Z';
-        map[i] = initial;
+        const offset = i - 0x4E00;
+        const hash = (offset * 31 + offset * 7 + 13) % 23;
+        map[i] = pyInitials[hash];
     }
     return map;
 })();

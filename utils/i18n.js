@@ -28,6 +28,9 @@ export const I18N = {
         set_date_confirm: "确定修改月票激活日期吗？这会按新周期重新计算配额和排期。",
         set_feedback: "如有任何建议，或者需要反馈问题，请联系：{email}",
         set_swish: "Swish 收款号码", set_swish_hint: "支持 07x 或 467x 格式",
+        set_users_title: "用户管理", set_no_users: "暂无用户",
+        set_edit_user: "编辑用户", set_user_name: "用户姓名", set_user_phone: "手机号码",
+        set_save_user: "保存", set_delete_user_confirm: "确定要删除这个用户吗？",
 
         pay_title: "Swish 支付", pay_scan: "请扫描二维码支付", pay_open: "打开 Swish App",
         pay_save: "保存二维码图片", pay_err_no_phone: "请先在设置中配置 Swish 手机号",
@@ -102,6 +105,9 @@ export const I18N = {
         set_date_confirm: "Change the activation date? Quotas and schedule will be recalculated for the new cycle.",
         set_feedback: "For suggestions or feedback, please contact: {email}",
         set_swish: "Your Swish Number for payment", set_swish_hint: "Supports 07x or 467x format",
+        set_users_title: "User Management", set_no_users: "No users yet",
+        set_edit_user: "Edit User", set_user_name: "User Name", set_user_phone: "Phone Number",
+        set_save_user: "Save", set_delete_user_confirm: "Are you sure you want to delete this user?",
 
         pay_title: "Swish Payment", pay_scan: "Scan to pay", pay_open: "Open Swish",
         pay_save: "Save QR Image", pay_err_no_phone: "Please configure Swish number in Settings first.",
@@ -176,6 +182,9 @@ export const I18N = {
         set_date_confirm: "Ändra startdatum? Kvoter och schema räknas om för den nya cykeln.",
         set_feedback: "För förslag eller feedback, vänligen kontakta: {email}",
         set_swish: "Ditt Swish-nummer för betalning", set_swish_hint: "Stödjer 07x eller 467x format",
+        set_users_title: "Användarhantering", set_no_users: "Inga användare än",
+        set_edit_user: "Redigera användare", set_user_name: "Användarnamn", set_user_phone: "Telefonnummer",
+        set_save_user: "Spara", set_delete_user_confirm: "Är du säker på att du vill ta bort denna användare?",
 
         pay_title: "Swish Betalning", pay_scan: "Skanna för att betala", pay_open: "Öppna Swish",
         pay_save: "Spara QR-bild", pay_err_no_phone: "Vänligen konfigurera Swish-nummer i inställningar först.",
