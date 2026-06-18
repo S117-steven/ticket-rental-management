@@ -27,12 +27,13 @@ Page({
 
     onShow() {
         if (this.data._dirty) {
+            this.setData({ _dirty: false, orderLimit: 20 });
             this.initData();
-            this.data._dirty = false;
         }
     },
 
     onPullDownRefresh() {
+        this.setData({ orderLimit: 20 });
         this.initData();
         wx.stopPullDownRefresh();
     },
@@ -67,17 +68,17 @@ Page({
         strings.daysLeftStr = t('dash_days_left', { n: stats.daysRemaining }, lang);
 
         this.setData({ t: strings }, () => {
-            this.calculateStats(strings);
+            this.calculateStats(strings, stats);
         });
         wx.setNavigationBarTitle({ title: t('nav_dashboard', null, lang) });
     },
 
-    calculateStats(strings) {
+    calculateStats(strings, cachedStats) {
         const trans = strings || this.data.t;
         const orders = app.globalData.orders;
         const config = app.globalData.config;
         const lang = config.language;
-        const stats = Logic.calculateStats(orders, config, app.globalData.users);
+        const stats = cachedStats || Logic.calculateStats(orders, config, app.globalData.users);
         const now = Date.now();
 
         // Recent Orders - with pagination
@@ -218,8 +219,7 @@ Page({
     },
 
     onOrderModalClose() {
-        this.setData({ showOrderModal: false, editingOrder: null });
-        this.data._dirty = true;
+        this.setData({ showOrderModal: false, editingOrder: null, _dirty: true });
         this.initData();
     },
 
@@ -231,7 +231,7 @@ Page({
         });
         app.globalData.orders = orders;
         wx.setStorageSync('tm_orders', orders);
-        this.data._dirty = true;
+        this.setData({ _dirty: true });
         this.initData();
 
         const lang = app.globalData.config.language;

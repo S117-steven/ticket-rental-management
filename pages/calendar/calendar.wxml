@@ -3,7 +3,7 @@
         <view class="text-xl font-bold">{{t.cal_title}}</view>
         <view class="flex items-center gap-2">
             <view class="text-sm px-2 py-1 bg-slate-100 rounded" bindtap="prevCycle" hover-class="hover-effect"><text>&lt;</text></view>
-            <view wx:if="{{cycleOffset !== 0}}" class="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded" bindtap="resetCycle" hover-class="hover-effect">Today</view>
+            <view wx:if="{{cycleOffset !== 0}}" class="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded" bindtap="resetCycle" hover-class="hover-effect">{{t.cal_today}}</view>
             <view class="text-sm px-2 py-1 bg-slate-100 rounded" bindtap="nextCycle" hover-class="hover-effect"><text>&gt;</text></view>
         </view>
     </view>

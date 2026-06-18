@@ -121,6 +121,20 @@ page {
 .bg-red-50 { background-color: #FEF2F2; }
 .text-red-600 { color: #DC2626; }
 
+/* Status Badge Colors */
+.bg-green-100 { background-color: #DCFCE7; }
+.text-green-700 { color: #15803D; }
+.border-green-200 { border-color: #BBF7D0; }
+.bg-amber-100 { background-color: #FEF3C7; }
+.text-amber-700 { color: #B45309; }
+.border-amber-200 { border-color: #FDE68A; }
+.bg-slate-100 { background-color: #F1F5F9; }
+.text-slate-600 { color: #475569; }
+.border-slate-200 { border-color: #E2E8F0; }
+.border-red-100 { border-color: #FEE2E2; }
+.line-through { text-decoration: line-through; }
+.bg-gray-100 { background-color: #F3F4F6; }
+
 /* Safety Area */
 .safe-area-inset-bottom {
   padding-bottom: env(safe-area-inset-bottom);

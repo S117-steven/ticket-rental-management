@@ -31,6 +31,8 @@ export const I18N = {
         set_users_title: "用户管理", set_no_users: "暂无用户",
         set_edit_user: "编辑用户", set_user_name: "用户姓名", set_user_phone: "手机号码",
         set_save_user: "保存", set_delete_user_confirm: "确定要删除这个用户吗？",
+        set_err_name_required: "请输入姓名", set_saved: "已保存", set_deleted: "已删除",
+        set_confirm_delete: "确认删除", set_delete_user_has_orders: "该用户有关联的订单，无法删除",
 
         pay_title: "Swish 支付", pay_scan: "请扫描二维码支付", pay_open: "打开 Swish App",
         pay_save: "保存二维码图片", pay_err_no_phone: "请先在设置中配置 Swish 手机号",
@@ -108,6 +110,8 @@ export const I18N = {
         set_users_title: "User Management", set_no_users: "No users yet",
         set_edit_user: "Edit User", set_user_name: "User Name", set_user_phone: "Phone Number",
         set_save_user: "Save", set_delete_user_confirm: "Are you sure you want to delete this user?",
+        set_err_name_required: "Name required", set_saved: "Saved", set_deleted: "Deleted",
+        set_confirm_delete: "Confirm Delete", set_delete_user_has_orders: "This user has associated orders and cannot be deleted",
 
         pay_title: "Swish Payment", pay_scan: "Scan to pay", pay_open: "Open Swish",
         pay_save: "Save QR Image", pay_err_no_phone: "Please configure Swish number in Settings first.",
@@ -185,6 +189,8 @@ export const I18N = {
         set_users_title: "Användarhantering", set_no_users: "Inga användare än",
         set_edit_user: "Redigera användare", set_user_name: "Användarnamn", set_user_phone: "Telefonnummer",
         set_save_user: "Spara", set_delete_user_confirm: "Är du säker på att du vill ta bort denna användare?",
+        set_err_name_required: "Namn krävs", set_saved: "Sparad", set_deleted: "Borttagen",
+        set_confirm_delete: "Bekräfta borttagning", set_delete_user_has_orders: "Denna användare har kopplade ordrar och kan inte tas bort",
 
         pay_title: "Swish Betalning", pay_scan: "Skanna för att betala", pay_open: "Öppna Swish",
         pay_save: "Spara QR-bild", pay_err_no_phone: "Vänligen konfigurera Swish-nummer i inställningar först.",

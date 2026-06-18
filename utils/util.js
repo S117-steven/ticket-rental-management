@@ -296,9 +296,8 @@ export const Logic = {
         if (newOrder.startTime < cycleStart) return { valid: false, reason: "ord_err_cycle_start" };
         if (newOrder.startTime > cycleEnd) return { valid: false, reason: "ord_err_cycle" };
         if (newOrder.endTime <= newOrder.startTime) return { valid: false, reason: "ord_err_time" };
-        if (newOrder.endTime > cycleEnd) {
-            newOrder.endTime = cycleEnd;
-        }
+        
+        const adjustedEndTime = newOrder.endTime > cycleEnd ? cycleEnd : newOrder.endTime;
 
         const effectiveOrders = Logic.getEffectiveOrders(existingOrders)
             .filter(o => isEditMode ? o.id !== newOrder.id : true);

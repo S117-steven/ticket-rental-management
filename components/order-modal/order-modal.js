@@ -39,6 +39,7 @@ Component({
         filteredUsers: [],
         userQuery: '',
         DurationType: ['4h', '8h', '12h', '24h', '48h', '7d', 'Remaining'],
+        durationOptions: [],
         userId: '',
         name: '',
         phone: '',
@@ -150,7 +151,8 @@ Component({
             ];
             const strings = {};
             keys.forEach(k => strings[k] = t(k, null, lang));
-            this.setData({ t: strings });
+            const durationOptions = this.data.DurationType.map(d => t(Logic.getDurationI18nKey(d), null, lang));
+            this.setData({ t: strings, durationOptions });
         },
 
         normalizePhone(phone) {

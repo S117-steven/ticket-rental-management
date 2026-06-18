@@ -147,18 +147,18 @@ Page({
 
         const activeTenants = hasHistory ? tenants : [];
 
-        activeTenants.forEach(t => {
+        activeTenants.forEach(tenant => {
             const uid = Logic.uuid();
-            const name = t.name.trim();
+            const name = tenant.name.trim();
             const user = {
                 id: uid,
                 name: name,
-                phone: t.phone.trim(),
+                phone: tenant.phone.trim(),
                 totalContribution: 0,
                 pinyinInitial: Logic.generatePinyinInitial(name),
                 cycleUsageOffset: {
                     cycleId: startTs,
-                    sends: Math.max(0, parseInt(t.count, 10) || 0)
+                    sends: Math.max(0, parseInt(tenant.count, 10) || 0)
                 }
             };
             app.saveUser(user);

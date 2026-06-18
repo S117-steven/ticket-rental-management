@@ -102,7 +102,7 @@ Page({
                     className: 'cal-item-occupied'
                 };
                 showBadge = false;
-                actionText = '';
+                actionText = this.data.t.cal_edit_order;
                 orderId = activeOrder.id;
             }
 

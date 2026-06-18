@@ -119,6 +119,12 @@ Page({
                                 if (!data.config || !data.users || !data.orders) {
                                     throw new Error('Invalid format');
                                 }
+                                if (!Array.isArray(data.users) || !Array.isArray(data.orders)) {
+                                    throw new Error('Invalid format');
+                                }
+                                if (typeof data.config.cycleStartDate !== 'number' || !data.config.priceMatrix) {
+                                    throw new Error('Invalid format');
+                                }
                                 app.globalData.users = data.users;
                                 app.globalData.orders = data.orders;
                                 app.updateConfig(data.config);
@@ -183,8 +189,9 @@ Page({
 
     saveUser() {
         const user = this.data.editingUser;
+        const lang = this.data.config.language;
         if (!user || !user.name) {
-            wx.showToast({ title: '请输入姓名', icon: 'none' });
+            wx.showToast({ title: t('set_err_name_required', null, lang), icon: 'none' });
             return;
         }
 
@@ -202,7 +209,7 @@ Page({
             editingUser: null,
             users: app.globalData.users
         });
-        wx.showToast({ title: '已保存', icon: 'success' });
+        wx.showToast({ title: t('set_saved', null, lang), icon: 'success' });
     },
 
     cancelEditUser() {
@@ -214,9 +221,22 @@ Page({
 
     deleteUser(e) {
         const id = e.currentTarget.dataset.id;
+        const lang = this.data.config.language;
+        const orders = app.globalData.orders || [];
+        const hasOrders = orders.some(o => o.userId === id);
+        
+        if (hasOrders) {
+            wx.showModal({
+                title: t('set_delete_user_confirm', null, lang),
+                content: t('set_delete_user_has_orders', null, lang),
+                showCancel: false
+            });
+            return;
+        }
+
         wx.showModal({
-            title: '确认删除',
-            content: this.data.t.set_delete_user_confirm || '确定要删除这个用户吗？',
+            title: t('set_confirm_delete', null, lang),
+            content: t('set_delete_user_confirm', null, lang),
             success: (res) => {
                 if (res.confirm) {
                     let users = app.globalData.users || [];
@@ -224,7 +244,7 @@ Page({
                     app.globalData.users = users;
                     wx.setStorageSync('tm_users', users);
                     this.setData({ users });
-                    wx.showToast({ title: '已删除', icon: 'success' });
+                    wx.showToast({ title: t('set_deleted', null, lang), icon: 'success' });
                 }
             }
         });
