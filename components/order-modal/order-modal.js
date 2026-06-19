@@ -59,7 +59,8 @@ Component({
         indexLetters: [],
         showIndex: true,
         showCustomerPicker: false,
-        activeLetter: ''
+        activeLetter: '',
+        activeTicketLabel: ''
     },
 
     methods: {
@@ -81,6 +82,8 @@ Component({
         initData() {
             const { date, time } = this.getDefaultDateTime();
             const lang = app.globalData.config.language;
+            const activeTicket = Logic.getActiveTicket(app.globalData.config);
+            const activeTicketLabel = activeTicket ? activeTicket.label : '';
             this.updateI18n();
             this.setData({
                 users: app.globalData.users || [],
@@ -97,7 +100,8 @@ Component({
                 reason: '',
                 hasReminder: false,
                 reminderMinutes: 30,
-                isEdit: false
+                isEdit: false,
+                activeTicketLabel
             }, () => {
                 this.refreshFilteredUsers('');
                 this.validate();
@@ -471,7 +475,6 @@ Component({
                 startTime: Math.floor(startTs / 1000),
                 endTime: Math.floor(endTs / 1000),
                 description: `${phoneLabel}: ${phone}`,
-                location: locationLabel,
                 alarm: true,
                 alarmOffset,
                 success: () => {

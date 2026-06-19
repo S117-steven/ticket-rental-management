@@ -7,8 +7,8 @@
     </view>
   </view>
 
-  <!-- Ticket Switcher -->
-  <view wx:if="{{tickets.length > 1}}" class="ticket-tabs mb-6">
+  <!-- Ticket Switcher / Current Ticket -->
+  <view class="ticket-tabs mb-6">
     <view wx:for="{{tickets}}" wx:key="id"
           class="ticket-tab {{item.id === activeTicketId ? 'ticket-tab-active' : ''}}"
           bindtap="switchTicket" data-id="{{item.id}}">

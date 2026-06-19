@@ -36,19 +36,6 @@
             <button class="btn btn-secondary flex-1" bindtap="addTicket" data-type="summer" hover-class="hover-effect">+ {{t.set_summer_ticket}}</button>
         </view>
     </view>
-                    <text class="ticket-date">{{item.cycleStartDateStr}}</text>
-                </view>
-                <view class="ticket-actions">
-                    <text wx:if="{{item.id === activeTicketId}}" class="active-badge">当前</text>
-                    <text class="delete-btn" bindtap="deleteTicket" data-id="{{item.id}}">🗑️</text>
-                </view>
-            </view>
-        </view>
-        <view class="flex gap-4 mt-4">
-            <button class="btn btn-secondary flex-1" bindtap="addTicket" data-type="monthly" hover-class="hover-effect">+ 月票</button>
-            <button class="btn btn-secondary flex-1" bindtap="addTicket" data-type="summer" hover-class="hover-effect">+ 夏季票</button>
-        </view>
-    </view>
 
     <view class="setting-card">
         <view class="flex justify-between items-start mb-4">

@@ -240,10 +240,18 @@ Page({
                                     throw new Error('Invalid format');
                                 }
                                 app.globalData.users = data.users;
-                                app.globalData.orders = data.orders;
-                                app.updateConfig(data.config);
                                 wx.setStorageSync('tm_users', data.users);
-                                wx.setStorageSync('tm_orders', data.orders);
+                                
+                                if (isV1) {
+                                    const migratedConfig = app.migrateV1ToV2(data.config, data.orders);
+                                    app.globalData.config = migratedConfig;
+                                    app.globalData.orders = wx.getStorageSync('tm_orders');
+                                } else {
+                                    app.globalData.orders = data.orders;
+                                    app.updateConfig(data.config);
+                                    wx.setStorageSync('tm_orders', data.orders);
+                                }
+                                
                                 this.initData();
                                 wx.showToast({ title: this.data.t.set_import_success, icon: 'success' });
                             } catch (e) {

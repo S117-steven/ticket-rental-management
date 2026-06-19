@@ -1,7 +1,10 @@
 <view class="modal-mask" wx:if="{{show}}" bindtap="close">
   <view class="modal-container" catchtap="noop">
     <view class="modal-header">
-      <text class="text-xl">{{isEdit ? t.set_save : t.ord_title}}</text>
+      <view class="flex flex-col">
+        <text class="text-xl">{{isEdit ? t.set_save : t.ord_title}}</text>
+        <text wx:if="{{activeTicketLabel}}" class="text-xs text-gray-400 mt-1">{{activeTicketLabel}}</text>
+      </view>
       <view class="close-btn" bindtap="close" hover-class="hover-effect">x</view>
     </view>
 
