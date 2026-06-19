@@ -7,6 +7,28 @@
     </view>
   </view>
 
+  <!-- Ticket Switcher -->
+  <view wx:if="{{tickets.length > 1}}" class="ticket-tabs mb-6">
+    <view wx:for="{{tickets}}" wx:key="id"
+          class="ticket-tab {{item.id === activeTicketId ? 'ticket-tab-active' : ''}}"
+          bindtap="switchTicket" data-id="{{item.id}}">
+      <text>{{item.label}}</text>
+      <text wx:if="{{item.type === 'summer'}}" class="summer-badge">☀️</text>
+    </view>
+  </view>
+
+  <!-- Summer Ticket Cost -->
+  <view wx:if="{{activeTicket.type === 'summer'}}" class="summer-cost-card mb-6">
+    <view class="flex justify-between items-center">
+      <text class="text-sm">{{t.dash_summer_cost}}</text>
+      <text class="text-lg font-bold">{{activeTicket.summerConfig.cost}} kr</text>
+    </view>
+    <view class="flex justify-between items-center mt-2">
+      <text class="text-sm">{{t.dash_profit}}</text>
+      <text class="text-lg font-bold text-green-600">{{stats.totalRevenue - activeTicket.summerConfig.cost}} kr</text>
+    </view>
+  </view>
+
   <!-- Stats Grid -->
   <view class="grid grid-cols-2 gap-4 mb-8">
     <!-- Sends -->
@@ -17,7 +39,7 @@
        </view>
        <view>
          <view class="text-xl font-bold">{{stats.usedCount}}</view>
-         <view class="text-xs mt-1">/{{MAX_SENDS_PER_CYCLE}}</view>
+         <view class="text-xs mt-1">/{{stats.maxSends}}</view>
        </view>
     </view>
 
@@ -30,7 +52,7 @@
        <view class="flex justify-between items-end">
          <view>
            <view class="text-xl font-bold">{{stats.uniqueUsers}}</view>
-           <view class="text-xs mt-1">/{{MAX_USERS_PER_CYCLE}}</view>
+           <view class="text-xs mt-1">/{{stats.maxUsers}}</view>
          </view>
          <view class="text-xs text-blue-600 font-bold border-b border-blue-600" bindtap="toggleUserDetailsModal" hover-class="hover-effect">
            {{t.dash_view_details}}

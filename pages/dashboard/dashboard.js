@@ -1,5 +1,5 @@
 const app = getApp();
-import { Logic, MAX_SENDS_PER_CYCLE, MAX_USERS_PER_CYCLE, OrderStatus } from '../../utils/util';
+import { Logic, OrderStatus } from '../../utils/util';
 import { t } from '../../utils/i18n';
 
 Page({
@@ -14,8 +14,9 @@ Page({
         nextOrderSub: '',
         nextOrderRaw: null,
         editingOrder: null,
-        MAX_SENDS_PER_CYCLE,
-        MAX_USERS_PER_CYCLE,
+        tickets: [],
+        activeTicketId: '',
+        activeTicket: null,
         t: {},
         showOrderModal: false,
         paymentPrice: 0,
@@ -39,12 +40,26 @@ Page({
     },
 
     initData() {
-        // Check if initialized
         if (!app.globalData.config.isInitialized) {
             return wx.redirectTo({ url: '/pages/onboarding/onboarding' });
         }
 
+        const config = app.globalData.config;
+        const tickets = config.tickets || [];
+        const activeTicketId = config.activeTicketId || (tickets[0] ? tickets[0].id : '');
+        const activeTicket = Logic.getActiveTicket(config);
+
+        this.setData({ tickets, activeTicketId, activeTicket });
         this.updateI18n();
+    },
+
+    switchTicket(e) {
+        const ticketId = e.currentTarget.dataset.id;
+        const config = app.globalData.config;
+        config.activeTicketId = ticketId;
+        app.updateConfig(config);
+        this.setData({ activeTicketId: ticketId, activeTicket: Logic.getActiveTicket(config) });
+        this.calculateStats();
     },
 
     updateI18n() {
@@ -75,14 +90,26 @@ Page({
 
     calculateStats(strings, cachedStats) {
         const trans = strings || this.data.t;
-        const orders = app.globalData.orders;
+        const allOrders = app.globalData.orders;
         const config = app.globalData.config;
         const lang = config.language;
-        const stats = cachedStats || Logic.calculateStats(orders, config, app.globalData.users);
+        const activeTicket = this.data.activeTicket;
+        
+        if (!activeTicket) {
+            this.setData({ stats: null, recentOrders: [], displayOrders: [], userDetails: [] });
+            return;
+        }
+
+        const ticketOrders = allOrders.filter(o => o.ticketId === activeTicket.id);
+        const cycleStart = activeTicket.cycleStartDate;
+        const cycleEnd = Logic.getTicketCycleEnd(activeTicket);
+        const maxSends = Logic.getTicketMaxSends(activeTicket);
+        const maxUsers = Logic.getTicketMaxUsers(activeTicket);
+        
+        const stats = cachedStats || Logic.calculateStats(ticketOrders, { ...config, cycleStartDate: cycleStart }, app.globalData.users);
         const now = Date.now();
 
-        // Recent Orders - with pagination
-        const recentOrders = [...orders]
+        const recentOrders = [...ticketOrders]
             .sort((a, b) => b.startTime - a.startTime)
             .map((o, idx) => ({
                 ...o,
@@ -90,7 +117,7 @@ Page({
                 endTimeStr: this.formatTime(o.endTime),
                 displayStatus: Logic.getDisplayStatus(o, now),
                 statusBadgeClass: this.getStatusClass(Logic.getDisplayStatus(o, now)),
-                orderNumStr: t('dash_order_num', { n: orders.length - idx }, lang),
+                orderNumStr: t('dash_order_num', { n: ticketOrders.length - idx }, lang),
                 statusLabel: trans[`status_${Logic.getDisplayStatus(o, now).toLowerCase()}`] || Logic.getDisplayStatus(o, now)
             }));
 
@@ -98,11 +125,8 @@ Page({
         const displayOrders = recentOrders.slice(0, orderLimit);
         const hasMoreOrders = recentOrders.length > orderLimit;
 
-        // User Details Details for Modal
         const userMap = {};
-        const cycleStart = config.cycleStartDate;
-        const cycleEnd = Logic.getCycleEnd(cycleStart);
-        const effectiveOrders = Logic.getEffectiveOrders(orders).filter(o =>
+        const effectiveOrders = Logic.getEffectiveOrders(ticketOrders).filter(o =>
             o.startTime >= cycleStart && o.startTime <= cycleEnd
         );
 
@@ -141,14 +165,10 @@ Page({
                 if (lang === 'en' && u.count === 1) {
                     countStr = countStr.replace('Orders', 'Order');
                 }
-                return {
-                    ...u,
-                    countStr
-                };
+                return { ...u, countStr };
             });
 
-        // Next Order
-        const nextOrder = orders
+        const nextOrder = ticketOrders
             .filter(o => o.startTime > now && Logic.getDisplayStatus(o, now) !== OrderStatus.CANCELLED)
             .sort((a, b) => a.startTime - b.startTime)[0];
 
@@ -161,6 +181,19 @@ Page({
             nextOrderSub = `${nextOrder.userParams.name} · ${nextOrder.durationType}`;
             nextOrderRaw = nextOrder;
         }
+
+        this.setData({
+            stats: { ...stats, maxSends, maxUsers },
+            orders: ticketOrders,
+            recentOrders,
+            displayOrders,
+            hasMoreOrders,
+            userDetails,
+            nextOrderText,
+            nextOrderSub,
+            nextOrderRaw
+        });
+    },
 
         this.setData({
             stats,

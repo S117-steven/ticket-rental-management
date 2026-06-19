@@ -14,15 +14,22 @@ App({
 
   initData() {
     let users = wx.getStorageSync('tm_users') || [];
-    const orders = wx.getStorageSync('tm_orders') || [];
-    const config = wx.getStorageSync('tm_config') || {
-      isInitialized: false,
-      language: 'zh',
-      cycleStartDate: new Date().setHours(0, 0, 0, 0),
-      priceMatrix: DEFAULT_PRICE_MATRIX,
-      initialUsageOffset: { sends: 0, users: 0, cycleId: 0 },
-      swishNumber: ''
-    };
+    let orders = wx.getStorageSync('tm_orders') || [];
+    let config = wx.getStorageSync('tm_config');
+
+    if (!config) {
+      config = {
+        isInitialized: false,
+        language: 'zh',
+        version: 2,
+        activeTicketId: '',
+        tickets: [],
+        swishNumber: ''
+      };
+    } else if (!config.version || config.version < 2) {
+      config = this.migrateV1ToV2(config, orders);
+      orders = wx.getStorageSync('tm_orders');
+    }
 
     let needSaveUsers = false;
     users = users.map(u => {
@@ -39,6 +46,33 @@ App({
     this.globalData.users = users;
     this.globalData.orders = orders;
     this.globalData.config = config;
+  },
+
+  migrateV1ToV2(oldConfig, orders) {
+    const ticketId = Logic.uuid();
+    const migratedOrders = orders.map(o => ({
+      ...o,
+      ticketId: o.ticketId || ticketId
+    }));
+    wx.setStorageSync('tm_orders', migratedOrders);
+
+    const newConfig = {
+      isInitialized: oldConfig.isInitialized,
+      language: oldConfig.language || 'zh',
+      version: 2,
+      activeTicketId: ticketId,
+      tickets: [{
+        id: ticketId,
+        type: 'monthly',
+        label: '月票 #1',
+        cycleStartDate: oldConfig.cycleStartDate,
+        priceMatrix: oldConfig.priceMatrix || DEFAULT_PRICE_MATRIX,
+        initialUsageOffset: oldConfig.initialUsageOffset || { sends: 0, users: 0, cycleId: 0 }
+      }],
+      swishNumber: oldConfig.swishNumber || ''
+    };
+    wx.setStorageSync('tm_config', newConfig);
+    return newConfig;
   },
 
   updateConfig(newConfig) {

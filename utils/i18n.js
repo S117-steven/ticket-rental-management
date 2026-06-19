@@ -13,6 +13,7 @@ export const I18N = {
         dash_order_count: "{n} 次订单", dash_close: "关闭",
         dash_caught_up: "一切安排就绪！新预订将显示在此处。",
         dash_manual_booking: "+ 手动录入订单",
+        dash_summer_cost: "购票成本", dash_profit: "净利润",
         status_active: "进行中", status_pending: "待开始", status_completed: "已结束", status_cancelled: "已取消",
         label_send: "发票", label_return: "归还",
 
@@ -92,6 +93,7 @@ export const I18N = {
         dash_order_count: "{n} Orders", dash_close: "Close",
         dash_caught_up: "You're all caught up! New bookings will appear here.",
         dash_manual_booking: "+ Create Manual Booking",
+        dash_summer_cost: "Ticket Cost", dash_profit: "Profit",
         status_active: "Active", status_pending: "Pending", status_completed: "Done", status_cancelled: "Cancelled",
         label_send: "Send", label_return: "Return",
 
@@ -171,6 +173,7 @@ export const I18N = {
         dash_order_count: "{n} bokningar", dash_close: "Stäng",
         dash_caught_up: "Du är helt uppdaterad! Nya bokningar visas här.",
         dash_manual_booking: "+ Lägg till manuell bokning",
+        dash_summer_cost: "Biljettkostnad", dash_profit: "Vinst",
         status_active: "Aktiv", status_pending: "Väntande", status_completed: "Klar", status_cancelled: "Avbruten",
         label_send: "Skicka", label_return: "Retur",
 

@@ -29,6 +29,26 @@ export const MAX_SENDS_PER_CYCLE = 15;
 export const MAX_USERS_PER_CYCLE = 5;
 export const CYCLE_DAYS = 30;
 
+export const TicketType = {
+    MONTHLY: 'monthly',
+    SUMMER: 'summer'
+};
+
+export const TICKET_DEFAULTS = {
+    monthly: {
+        cycleDays: 30,
+        maxSends: 15,
+        maxUsers: 5,
+        cost: 0
+    },
+    summer: {
+        cycleDays: 60,
+        maxSends: 31,
+        maxUsers: 5,
+        cost: 595
+    }
+};
+
 export const DURATION_MS = {
     '4h': 4 * 60 * 60 * 1000,
     '8h': 8 * 60 * 60 * 1000,
@@ -182,6 +202,38 @@ export const Logic = {
 
     getDurationI18nKey: (durationType) => {
         return durationType === DurationType.REMAINING ? 'dur_rem' : `dur_${durationType}`;
+    },
+
+    getTicketDefaults: (ticketType) => {
+        return TICKET_DEFAULTS[ticketType] || TICKET_DEFAULTS.monthly;
+    },
+
+    getTicketCycleDays: (ticket) => {
+        return Logic.getTicketDefaults(ticket.type).cycleDays;
+    },
+
+    getTicketCycleEnd: (ticket) => {
+        const days = Logic.getTicketCycleDays(ticket);
+        const d = new Date(ticket.cycleStartDate);
+        d.setDate(d.getDate() + days);
+        d.setHours(23, 59, 59, 999);
+        return d.getTime();
+    },
+
+    getTicketMaxSends: (ticket) => {
+        return Logic.getTicketDefaults(ticket.type).maxSends;
+    },
+
+    getTicketMaxUsers: (ticket) => {
+        return Logic.getTicketDefaults(ticket.type).maxUsers;
+    },
+
+    getTicketById: (config, ticketId) => {
+        return (config.tickets || []).find(t => t.id === ticketId) || null;
+    },
+
+    getActiveTicket: (config) => {
+        return Logic.getTicketById(config, config.activeTicketId) || (config.tickets || [])[0];
     },
 
     getCycleUsageOffset: (user, cycleStart) => {

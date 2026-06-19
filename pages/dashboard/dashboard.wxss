@@ -70,3 +70,43 @@
 .last-border-0:last-child {
   border-bottom: 0;
 }
+
+/* Ticket Switcher */
+.ticket-tabs {
+  display: flex;
+  gap: 16rpx;
+  overflow-x: auto;
+  padding: 8rpx 0;
+}
+
+.ticket-tab {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 16rpx 24rpx;
+  background-color: #F1F5F9;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #64748B;
+  white-space: nowrap;
+  border: 2rpx solid transparent;
+}
+
+.ticket-tab-active {
+  background-color: #EFF6FF;
+  color: #2563EB;
+  border-color: #93C5FD;
+}
+
+.summer-badge {
+  font-size: 24rpx;
+}
+
+/* Summer Ticket Cost Card */
+.summer-cost-card {
+  background-color: #FFFBEB;
+  border: 2rpx solid #FDE68A;
+  border-radius: 16rpx;
+  padding: 24rpx;
+}
