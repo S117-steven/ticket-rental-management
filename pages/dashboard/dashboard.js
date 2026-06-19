@@ -195,19 +195,6 @@ Page({
         });
     },
 
-        this.setData({
-            stats,
-            orders,
-            recentOrders,
-            displayOrders,
-            hasMoreOrders,
-            userDetails,
-            nextOrderText,
-            nextOrderSub,
-            nextOrderRaw
-        });
-    },
-
     toggleUserDetailsModal() {
         this.setData({
             showUserDetailsModal: !this.data.showUserDetailsModal

@@ -360,8 +360,11 @@ Component({
             const currentOrderId = isEdit ? this.data.initialData.id : null;
             const startTs = this.parseLocalDateTime(date, time);
             const config = app.globalData.config;
-            const cycleEnd = Logic.getCycleEnd(config.cycleStartDate);
+            const activeTicket = Logic.getActiveTicket(config);
+            const cycleEnd = Logic.getTicketCycleEnd(activeTicket);
             const endTs = Logic.getCalculatedEndTime(startTs, duration, cycleEnd);
+
+            const ticketOrders = (app.globalData.orders || []).filter(o => o.ticketId === activeTicket.id);
 
             const validation = Logic.validateOrder(
                 {
@@ -372,17 +375,17 @@ Component({
                     startTime: startTs,
                     endTime: endTs
                 },
-                app.globalData.orders || [],
-                config,
+                ticketOrders,
+                { ...config, cycleStartDate: activeTicket.cycleStartDate },
                 currentUserId,
                 isEdit,
                 app.globalData.users || []
             );
 
             const isRegular = existingUser
-                ? Logic.isRegularCustomer(existingUser.id, startTs, app.globalData.orders || [], config, currentOrderId, app.globalData.users || [])
+                ? Logic.isRegularCustomer(existingUser.id, startTs, ticketOrders, { ...config, cycleStartDate: activeTicket.cycleStartDate }, currentOrderId, app.globalData.users || [])
                 : false;
-            const price = Logic.calculatePrice(duration, !isRegular, config.priceMatrix);
+            const price = Logic.calculatePrice(duration, !isRegular, activeTicket.priceMatrix || config.priceMatrix);
 
             this.setData({
                 valid: validation.valid,
@@ -407,7 +410,8 @@ Component({
             const trimmedPhone = String(phone || '').trim();
             const startTs = this.parseLocalDateTime(date, time);
             const config = app.globalData.config;
-            const cycleEnd = Logic.getCycleEnd(config.cycleStartDate);
+            const activeTicket = Logic.getActiveTicket(config);
+            const cycleEnd = Logic.getTicketCycleEnd(activeTicket);
             const endTs = Logic.getCalculatedEndTime(startTs, duration, cycleEnd);
             const now = Date.now();
             const existingUser = this.resolveExistingUser();
@@ -423,6 +427,7 @@ Component({
                 : Logic.getDisplayStatus({ startTime: startTs, endTime: endTs, status: OrderStatus.PENDING }, now);
             const orderToSave = {
                 id: isEdit ? initialData.id : Logic.uuid(),
+                ticketId: activeTicket.id,
                 userId: userToSave.id,
                 userParams: { name: trimmedName, phone: trimmedPhone },
                 startTime: startTs,

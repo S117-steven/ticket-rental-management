@@ -21,11 +21,11 @@
   <view wx:if="{{activeTicket.type === 'summer'}}" class="summer-cost-card mb-6">
     <view class="flex justify-between items-center">
       <text class="text-sm">{{t.dash_summer_cost}}</text>
-      <text class="text-lg font-bold">{{activeTicket.summerConfig.cost}} kr</text>
+      <text class="text-lg font-bold">{{activeTicket.cost}} kr</text>
     </view>
     <view class="flex justify-between items-center mt-2">
       <text class="text-sm">{{t.dash_profit}}</text>
-      <text class="text-lg font-bold text-green-600">{{stats.totalRevenue - activeTicket.summerConfig.cost}} kr</text>
+      <text class="text-lg font-bold text-green-600">{{stats.totalRevenue - activeTicket.cost}} kr</text>
     </view>
   </view>
 

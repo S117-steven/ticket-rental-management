@@ -164,20 +164,27 @@ Page({
             app.saveUser(user);
         });
 
+        const ticketId = Logic.uuid();
         app.updateConfig({
             isInitialized: true,
             language: lang,
-            cycleStartDate: startTs,
-            priceMatrix: prices,
-            initialUsageOffset: {
-                sends: hasHistory ? Math.max(0, parseInt(sends, 10) || 0) : 0,
-                users: hasHistory ? Math.max(0, parseInt(users, 10) || 0) : 0,
-                cycleId: startTs
-            },
+            version: 2,
+            activeTicketId: ticketId,
+            tickets: [{
+                id: ticketId,
+                type: 'monthly',
+                label: '月票 #1',
+                cycleStartDate: startTs,
+                priceMatrix: prices,
+                initialUsageOffset: {
+                    sends: hasHistory ? Math.max(0, parseInt(sends, 10) || 0) : 0,
+                    users: hasHistory ? Math.max(0, parseInt(users, 10) || 0) : 0,
+                    cycleId: startTs
+                }
+            }],
             swishNumber: ''
         });
 
-        // Redirect to dashboard
         wx.switchTab({ url: '/pages/dashboard/dashboard' });
     }
 });

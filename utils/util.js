@@ -344,6 +344,8 @@ export const Logic = {
 
         const cycleStart = config.cycleStartDate;
         const cycleEnd = Logic.getCycleEnd(cycleStart);
+        const maxSends = config.maxSends || MAX_SENDS_PER_CYCLE;
+        const maxUsers = config.maxUsers || MAX_USERS_PER_CYCLE;
 
         if (newOrder.startTime < cycleStart) return { valid: false, reason: "ord_err_cycle_start" };
         if (newOrder.startTime > cycleEnd) return { valid: false, reason: "ord_err_cycle" };
@@ -364,12 +366,12 @@ export const Logic = {
             offsetUsers = config.initialUsageOffset.users;
         }
 
-        if (currentSends >= MAX_SENDS_PER_CYCLE) return { valid: false, reason: "ord_err_quota" };
+        if (currentSends >= maxSends) return { valid: false, reason: "ord_err_quota" };
 
         const currentUser = users.find(u => u.id === currentUserId);
         const isExistingUserInCycle = currentUniqueUsers.has(currentUserId) ||
             Logic.isHistoricalCycleUser(currentUser, cycleStart);
-        if (!isExistingUserInCycle && (currentUniqueUsers.size + offsetUsers) >= MAX_USERS_PER_CYCLE) {
+        if (!isExistingUserInCycle && (currentUniqueUsers.size + offsetUsers) >= maxUsers) {
             return { valid: false, reason: "ord_err_users" };
         }
 

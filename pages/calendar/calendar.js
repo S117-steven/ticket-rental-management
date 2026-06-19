@@ -45,25 +45,32 @@ Page({
     },
 
     renderCalendar() {
-        const orders = app.globalData.orders || [];
+        const allOrders = app.globalData.orders || [];
         const config = app.globalData.config;
         const lang = config.language;
+        const activeTicket = Logic.getActiveTicket(config);
+        
+        if (!activeTicket) return;
+
+        const ticketOrders = allOrders.filter(o => o.ticketId === activeTicket.id);
+        const cycleStart = activeTicket.cycleStartDate;
+        const cycleDays = Logic.getTicketCycleDays(activeTicket);
         const nowTs = Date.now();
         const days = [];
         const offset = this.data.cycleOffset || 0;
 
-        for (let i = 0; i < 30; i++) {
-            const d = new Date(config.cycleStartDate);
-            d.setDate(d.getDate() + i + offset * 30);
+        for (let i = 0; i < cycleDays; i++) {
+            const d = new Date(cycleStart);
+            d.setDate(d.getDate() + i + offset * cycleDays);
             const dateTs = d.getTime();
             const dateValue = Logic.formatLocalDate(d);
             const isToday = Logic.isSameDay(dateTs, nowTs);
 
-            const startOrder = orders.find(o =>
+            const startOrder = ticketOrders.find(o =>
                 Logic.getDisplayStatus(o, nowTs) !== OrderStatus.CANCELLED &&
                 Logic.isSameDay(o.startTime, dateTs)
             );
-            const activeOrder = orders.find(o =>
+            const activeOrder = ticketOrders.find(o =>
                 Logic.getDisplayStatus(o, nowTs) !== OrderStatus.CANCELLED &&
                 dateTs >= o.startTime &&
                 dateTs <= o.endTime
