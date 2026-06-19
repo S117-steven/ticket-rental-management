@@ -23,7 +23,7 @@
                         <text wx:if="{{item.type === 'summer'}}" class="ticket-type-badge summer">☀️ 夏季票</text>
                         <text wx:else class="ticket-type-badge monthly">📅 月票</text>
                     </view>
-                    <text class="ticket-date">{{item.cycleStartDate ? '开始: ' + item.cycleStartDate : ''}}</text>
+                    <text class="ticket-date">{{item.cycleStartDateStr}}</text>
                 </view>
                 <view class="ticket-actions">
                     <text wx:if="{{item.id === activeTicketId}}" class="active-badge">当前</text>
@@ -68,10 +68,10 @@
                 <view class="price-row">
                     <view class="flex-1 text-sm font-medium">{{durationLabels[index]}}</view>
                     <input class="price-input-small" type="number" min="0" max="9999"
-                           value="{{config.priceMatrix.newCustomer[item]}}" bindblur="updatePrice" data-type="newCustomer" data-dur="{{item}}" />
+                           value="{{activePriceMatrix.newCustomer[item]}}" bindblur="updatePrice" data-type="newCustomer" data-dur="{{item}}" />
                     <view style="width: 16rpx;"></view>
                     <input class="price-input-small" type="number" min="0" max="9999"
-                           value="{{config.priceMatrix.regularCustomer[item]}}" bindblur="updatePrice" data-type="regularCustomer" data-dur="{{item}}" />
+                           value="{{activePriceMatrix.regularCustomer[item]}}" bindblur="updatePrice" data-type="regularCustomer" data-dur="{{item}}" />
                 </view>
             </block>
         </view>

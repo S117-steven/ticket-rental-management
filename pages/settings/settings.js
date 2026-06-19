@@ -13,7 +13,8 @@ Page({
         editingUser: null,
         showEditModal: false,
         tickets: [],
-        activeTicketId: ''
+        activeTicketId: '',
+        activePriceMatrix: null
     },
 
     onShow() {
@@ -27,9 +28,13 @@ Page({
         const lang = config.language;
         const durationLabels = this.data.DurationType.map(d => t(Logic.getDurationI18nKey(d), null, lang));
         const users = app.globalData.users || [];
-        const tickets = config.tickets || [];
+        const tickets = (config.tickets || []).map(ticket => ({
+            ...ticket,
+            cycleStartDateStr: ticket.cycleStartDate ? Logic.formatLocalDate(ticket.cycleStartDate) : ''
+        }));
         const activeTicketId = config.activeTicketId || '';
-        this.setData({ config, isoDate, durationLabels, users, tickets, activeTicketId });
+        const activePriceMatrix = activeTicket ? activeTicket.priceMatrix : config.priceMatrix;
+        this.setData({ config, isoDate, durationLabels, users, tickets, activeTicketId, activePriceMatrix });
         this.updateI18n();
     },
 
@@ -150,15 +155,16 @@ Page({
     deleteTicket(e) {
         const ticketId = e.currentTarget.dataset.id;
         const config = this.data.config;
+        const lang = config.language;
         
         if (config.tickets.length <= 1) {
-            wx.showToast({ title: '至少保留一张票', icon: 'none' });
+            wx.showToast({ title: t('set_ticket_at_least_one', null, lang) || '至少保留一张票', icon: 'none' });
             return;
         }
 
         wx.showModal({
-            title: '确认删除',
-            content: '确定要删除这张票吗？',
+            title: t('set_confirm_delete_ticket', null, lang) || '确认删除',
+            content: t('set_delete_ticket_confirm', null, lang) || '确定要删除这张票吗？关联的订单将被取消。',
             success: (res) => {
                 if (res.confirm) {
                     const updatedTickets = config.tickets.filter(t => t.id !== ticketId);
@@ -172,8 +178,19 @@ Page({
                         activeTicketId: newActiveTicketId
                     };
                     app.updateConfig(newConfig);
+
+                    const orders = app.globalData.orders || [];
+                    const updatedOrders = orders.map(o => {
+                        if (o.ticketId === ticketId) {
+                            return { ...o, status: 'Cancelled', cancelledAt: Date.now() };
+                        }
+                        return o;
+                    });
+                    app.globalData.orders = updatedOrders;
+                    wx.setStorageSync('tm_orders', updatedOrders);
+
                     this.initData();
-                    wx.showToast({ title: '已删除', icon: 'success' });
+                    wx.showToast({ title: t('set_ticket_deleted', null, lang) || '已删除', icon: 'success' });
                 }
             }
         });
@@ -243,11 +260,21 @@ Page({
                     const today = new Date();
                     today.setHours(0, 0, 0, 0);
                     const ts = today.getTime();
-                    const newConfig = {
-                        ...this.data.config,
-                        cycleStartDate: ts,
-                        initialUsageOffset: { sends: 0, users: 0, cycleId: ts }
-                    };
+                    const config = this.data.config;
+                    const activeTicket = Logic.getActiveTicket(config);
+
+                    const updatedTickets = config.tickets.map(ticket => {
+                        if (ticket.id === activeTicket.id) {
+                            return {
+                                ...ticket,
+                                cycleStartDate: ts,
+                                initialUsageOffset: { sends: 0, users: 0, cycleId: ts }
+                            };
+                        }
+                        return ticket;
+                    });
+
+                    const newConfig = { ...config, tickets: updatedTickets };
                     app.updateConfig(newConfig);
                     this.initData();
                     wx.showToast({ title: this.data.t.set_renew_success, icon: 'success' });

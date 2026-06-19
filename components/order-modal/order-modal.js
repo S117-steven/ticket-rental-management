@@ -365,6 +365,12 @@ Component({
             const endTs = Logic.getCalculatedEndTime(startTs, duration, cycleEnd);
 
             const ticketOrders = (app.globalData.orders || []).filter(o => o.ticketId === activeTicket.id);
+            const ticketConfig = {
+                ...config,
+                cycleStartDate: activeTicket.cycleStartDate,
+                maxSends: Logic.getTicketMaxSends(activeTicket),
+                maxUsers: Logic.getTicketMaxUsers(activeTicket)
+            };
 
             const validation = Logic.validateOrder(
                 {
@@ -376,14 +382,14 @@ Component({
                     endTime: endTs
                 },
                 ticketOrders,
-                { ...config, cycleStartDate: activeTicket.cycleStartDate },
+                ticketConfig,
                 currentUserId,
                 isEdit,
                 app.globalData.users || []
             );
 
             const isRegular = existingUser
-                ? Logic.isRegularCustomer(existingUser.id, startTs, ticketOrders, { ...config, cycleStartDate: activeTicket.cycleStartDate }, currentOrderId, app.globalData.users || [])
+                ? Logic.isRegularCustomer(existingUser.id, startTs, ticketOrders, ticketConfig, currentOrderId, app.globalData.users || [])
                 : false;
             const price = Logic.calculatePrice(duration, !isRegular, activeTicket.priceMatrix || config.priceMatrix);
 

@@ -34,6 +34,9 @@ export const I18N = {
         set_save_user: "保存", set_delete_user_confirm: "确定要删除这个用户吗？",
         set_err_name_required: "请输入姓名", set_saved: "已保存", set_deleted: "已删除",
         set_confirm_delete: "确认删除", set_delete_user_has_orders: "该用户有关联的订单，无法删除",
+        set_tickets_title: "票据管理", set_confirm_delete_ticket: "确认删除",
+        set_delete_ticket_confirm: "确定要删除这张票吗？关联的订单将被取消。",
+        set_ticket_at_least_one: "至少保留一张票", set_ticket_deleted: "已删除",
 
         pay_title: "Swish 支付", pay_scan: "请扫描二维码支付", pay_open: "打开 Swish App",
         pay_save: "保存二维码图片", pay_err_no_phone: "请先在设置中配置 Swish 手机号",
@@ -114,6 +117,9 @@ export const I18N = {
         set_save_user: "Save", set_delete_user_confirm: "Are you sure you want to delete this user?",
         set_err_name_required: "Name required", set_saved: "Saved", set_deleted: "Deleted",
         set_confirm_delete: "Confirm Delete", set_delete_user_has_orders: "This user has associated orders and cannot be deleted",
+        set_tickets_title: "Ticket Management", set_confirm_delete_ticket: "Confirm Delete",
+        set_delete_ticket_confirm: "Are you sure you want to delete this ticket? Associated orders will be cancelled.",
+        set_ticket_at_least_one: "At least one ticket required", set_ticket_deleted: "Deleted",
 
         pay_title: "Swish Payment", pay_scan: "Scan to pay", pay_open: "Open Swish",
         pay_save: "Save QR Image", pay_err_no_phone: "Please configure Swish number in Settings first.",
@@ -194,6 +200,9 @@ export const I18N = {
         set_save_user: "Spara", set_delete_user_confirm: "Är du säker på att du vill ta bort denna användare?",
         set_err_name_required: "Namn krävs", set_saved: "Sparad", set_deleted: "Borttagen",
         set_confirm_delete: "Bekräfta borttagning", set_delete_user_has_orders: "Denna användare har kopplade ordrar och kan inte tas bort",
+        set_tickets_title: "Biljetthantering", set_confirm_delete_ticket: "Bekräfta borttagning",
+        set_delete_ticket_confirm: "Är du säker på att du vill ta bort denna biljett? Kopplade ordrar kommer att avbrytas.",
+        set_ticket_at_least_one: "Minst en biljett krävs", set_ticket_deleted: "Borttagen",
 
         pay_title: "Swish Betalning", pay_scan: "Skanna för att betala", pay_open: "Öppna Swish",
         pay_save: "Spara QR-bild", pay_err_no_phone: "Vänligen konfigurera Swish-nummer i inställningar först.",

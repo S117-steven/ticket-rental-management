@@ -78,12 +78,21 @@ Page({
         const strings = {};
         keys.forEach(k => strings[k] = t(k, null, lang));
 
-        // Dynamic stats translations
-        const stats = Logic.calculateStats(app.globalData.orders, app.globalData.config, app.globalData.users);
-        strings.daysLeftStr = t('dash_days_left', { n: stats.daysRemaining }, lang);
+        // Dynamic stats translations using active ticket
+        const config = app.globalData.config;
+        const activeTicket = Logic.getActiveTicket(config);
+        if (activeTicket) {
+            const ticketOrders = (app.globalData.orders || []).filter(o => o.ticketId === activeTicket.id);
+            const cycleEnd = Logic.getTicketCycleEnd(activeTicket);
+            const now = Date.now();
+            const daysRemaining = now < cycleEnd ? Math.ceil((cycleEnd - now) / (1000 * 60 * 60 * 24)) : 0;
+            strings.daysLeftStr = t('dash_days_left', { n: daysRemaining }, lang);
+        } else {
+            strings.daysLeftStr = t('dash_days_left', { n: 0 }, lang);
+        }
 
         this.setData({ t: strings }, () => {
-            this.calculateStats(strings, stats);
+            this.calculateStats(strings);
         });
         wx.setNavigationBarTitle({ title: t('nav_dashboard', null, lang) });
     },
