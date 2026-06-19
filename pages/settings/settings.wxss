@@ -131,6 +131,82 @@
   color: #94A3B8;
 }
 
+/* Ticket List Styles */
+.ticket-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.ticket-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx;
+  background-color: #F8FAFC;
+  border-radius: 16rpx;
+  border: 2rpx solid #E2E8F0;
+}
+
+.ticket-item-active {
+  background-color: #EFF6FF;
+  border-color: #93C5FD;
+}
+
+.ticket-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.ticket-label {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.ticket-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+.ticket-type-badge {
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.ticket-type-badge.summer {
+  background-color: #FEF3C7;
+  color: #92400E;
+}
+
+.ticket-type-badge.monthly {
+  background-color: #DBEAFE;
+  color: #1E40AF;
+}
+
+.ticket-date {
+  font-size: 24rpx;
+  color: #64748B;
+}
+
+.ticket-actions {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.active-badge {
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  background-color: #10B981;
+  color: #ffffff;
+  border-radius: 8rpx;
+}
+
 /* Modal Styles */
 .modal-mask {
   position: fixed;

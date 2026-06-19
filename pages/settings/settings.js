@@ -1,5 +1,5 @@
 const app = getApp();
-import { Logic } from '../../utils/util';
+import { Logic, TicketType } from '../../utils/util';
 import { t } from '../../utils/i18n';
 
 Page({
@@ -11,7 +11,9 @@ Page({
         t: {},
         users: [],
         editingUser: null,
-        showEditModal: false
+        showEditModal: false,
+        tickets: [],
+        activeTicketId: ''
     },
 
     onShow() {
@@ -20,11 +22,14 @@ Page({
 
     initData() {
         const config = app.globalData.config;
-        const isoDate = Logic.formatLocalDate(config.cycleStartDate);
+        const activeTicket = Logic.getActiveTicket(config);
+        const isoDate = activeTicket ? Logic.formatLocalDate(activeTicket.cycleStartDate) : '';
         const lang = config.language;
         const durationLabels = this.data.DurationType.map(d => t(Logic.getDurationI18nKey(d), null, lang));
         const users = app.globalData.users || [];
-        this.setData({ config, isoDate, durationLabels, users });
+        const tickets = config.tickets || [];
+        const activeTicketId = config.activeTicketId || '';
+        this.setData({ config, isoDate, durationLabels, users, tickets, activeTicketId });
         this.updateI18n();
     },
 
@@ -60,19 +65,25 @@ Page({
     },
 
     onDateChange(e) {
-        // 使用本地时间解析，避免 UTC 时区偏移
         const ts = Logic.parseLocalDate(e.detail.value);
+        const config = this.data.config;
+        const activeTicket = Logic.getActiveTicket(config);
+        
+        const updatedTickets = config.tickets.map(ticket => {
+            if (ticket.id === activeTicket.id) {
+                return {
+                    ...ticket,
+                    cycleStartDate: ts,
+                    initialUsageOffset: { sends: 0, users: 0, cycleId: ts }
+                };
+            }
+            return ticket;
+        });
 
-        const newConfig = {
-            ...this.data.config,
-            cycleStartDate: ts,
-            initialUsageOffset: { sends: 0, users: 0, cycleId: ts }
-        };
+        const newConfig = { ...config, tickets: updatedTickets };
         app.updateConfig(newConfig);
         this.initData();
     },
-
-
 
     updatePrice(e) {
         const type = e.currentTarget.dataset.type;
@@ -81,10 +92,91 @@ Page({
         if (val < 0) val = 0;
         if (val > 9999) val = 9999;
 
-        const newConfig = { ...this.data.config, priceMatrix: JSON.parse(JSON.stringify(this.data.config.priceMatrix)) };
-        newConfig.priceMatrix[type][dur] = val;
+        const config = this.data.config;
+        const activeTicket = Logic.getActiveTicket(config);
+        const priceMatrix = JSON.parse(JSON.stringify(activeTicket.priceMatrix || config.priceMatrix));
+        priceMatrix[type][dur] = val;
+
+        const updatedTickets = config.tickets.map(ticket => {
+            if (ticket.id === activeTicket.id) {
+                return { ...ticket, priceMatrix };
+            }
+            return ticket;
+        });
+
+        const newConfig = { ...config, tickets: updatedTickets };
         app.updateConfig(newConfig);
         this.setData({ config: newConfig });
+    },
+
+    addTicket(e) {
+        const type = e.currentTarget.dataset.type;
+        const config = this.data.config;
+        const defaults = Logic.getTicketDefaults(type);
+        const ticketId = Logic.uuid();
+        const label = type === 'summer' ? '夏季票' : `月票 #${config.tickets.length + 1}`;
+
+        const newTicket = {
+            id: ticketId,
+            type: type,
+            label: label,
+            cycleStartDate: new Date().setHours(0, 0, 0, 0),
+            priceMatrix: JSON.parse(JSON.stringify(config.tickets[0]?.priceMatrix || {
+                newCustomer: { '4h': 40, '8h': 60, '12h': 80, '24h': 100, '48h': 180, '7d': 500, 'Remaining': 600 },
+                regularCustomer: { '4h': 35, '8h': 50, '12h': 70, '24h': 90, '48h': 160, '7d': 450, 'Remaining': 550 }
+            })),
+            initialUsageOffset: { sends: 0, users: 0, cycleId: 0 },
+            cost: defaults.cost
+        };
+
+        const newConfig = {
+            ...config,
+            tickets: [...config.tickets, newTicket],
+            activeTicketId: ticketId
+        };
+        app.updateConfig(newConfig);
+        this.initData();
+        wx.showToast({ title: '已添加', icon: 'success' });
+    },
+
+    switchTicket(e) {
+        const ticketId = e.currentTarget.dataset.id;
+        const config = this.data.config;
+        const newConfig = { ...config, activeTicketId: ticketId };
+        app.updateConfig(newConfig);
+        this.initData();
+    },
+
+    deleteTicket(e) {
+        const ticketId = e.currentTarget.dataset.id;
+        const config = this.data.config;
+        
+        if (config.tickets.length <= 1) {
+            wx.showToast({ title: '至少保留一张票', icon: 'none' });
+            return;
+        }
+
+        wx.showModal({
+            title: '确认删除',
+            content: '确定要删除这张票吗？',
+            success: (res) => {
+                if (res.confirm) {
+                    const updatedTickets = config.tickets.filter(t => t.id !== ticketId);
+                    const newActiveTicketId = ticketId === config.activeTicketId 
+                        ? updatedTickets[0].id 
+                        : config.activeTicketId;
+
+                    const newConfig = {
+                        ...config,
+                        tickets: updatedTickets,
+                        activeTicketId: newActiveTicketId
+                    };
+                    app.updateConfig(newConfig);
+                    this.initData();
+                    wx.showToast({ title: '已删除', icon: 'success' });
+                }
+            }
+        });
     },
 
     exportData() {
