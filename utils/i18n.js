@@ -21,6 +21,8 @@ export const I18N = {
         cal_available: "可预约", cal_active: "已发送", cal_reserved: "已预约", cal_past: "历史订单",
         cal_occupied_desc: "延续自前日", cal_count_minus: "次数 -1",
         cal_create_here: "点此预约", cal_edit_order: "点此编辑", cal_event_title: "门票出租",
+        cal_no_ticket: "请先在设置中创建票", cal_go_settings: "前往设置",
+        cal_switched: "已切换到 {label}",
 
         set_title: "设置", set_lang: "语言设置", set_cycle: "周期设置", set_renew: "今天续费",
         set_date: "月票激活日期", set_date_hint: "修改日期将开启新周期，且会清空旧的初始配额。",
@@ -39,6 +41,7 @@ export const I18N = {
         set_ticket_at_least_one: "至少保留一张票", set_ticket_deleted: "已删除",
         set_summer_ticket: "夏季票", set_monthly_ticket: "月票",
         set_ticket_added: "已添加", set_summer_badge: "☀️ 夏季票", set_monthly_badge: "📅 月票", set_current: "当前",
+        set_ticket_name_label: "票名称", set_ticket_name_placeholder: "输入票名称",
 
         pay_title: "Swish 支付", pay_scan: "请扫描二维码支付", pay_open: "打开 Swish App",
         pay_save: "保存二维码图片", pay_err_no_phone: "请先在设置中配置 Swish 手机号",
@@ -106,6 +109,8 @@ export const I18N = {
         cal_active: "Sent", cal_reserved: "Reserved", cal_past: "Past", cal_occupied: "Occupied",
         cal_occupied_desc: "Continued", cal_count_minus: "Count -1",
         cal_create_here: "Book here", cal_edit_order: "Edit", cal_event_title: "Ticket Rental",
+        cal_no_ticket: "Please create a ticket in Settings first", cal_go_settings: "Go to Settings",
+        cal_switched: "Switched to {label}",
 
         set_title: "Settings", set_lang: "Language", set_cycle: "Cycle Settings", set_renew: "Renew Today",
         set_date: "Activation Date", set_date_hint: "Changing date starts a new cycle and clears old initial quotas.",
@@ -124,6 +129,7 @@ export const I18N = {
         set_ticket_at_least_one: "At least one ticket required", set_ticket_deleted: "Deleted",
         set_summer_ticket: "Summer Ticket", set_monthly_ticket: "Monthly Ticket",
         set_ticket_added: "Added", set_summer_badge: "☀️ Summer", set_monthly_badge: "📅 Monthly", set_current: "Current",
+        set_ticket_name_label: "Ticket Name", set_ticket_name_placeholder: "Enter ticket name",
 
         pay_title: "Swish Payment", pay_scan: "Scan to pay", pay_open: "Open Swish",
         pay_save: "Save QR Image", pay_err_no_phone: "Please configure Swish number in Settings first.",
@@ -191,6 +197,8 @@ export const I18N = {
         cal_available: "Tillgänglig", cal_active: "Skickad", cal_reserved: "Bokad", cal_past: "Historik",
         cal_occupied_desc: "Fortsättning", cal_count_minus: "Antal -1",
         cal_create_here: "Boka här", cal_edit_order: "Redigera", cal_event_title: "Biljettuthyrning",
+        cal_no_ticket: "Vänligen skapa en biljett i Inställningar först", cal_go_settings: "Gå till Inställningar",
+        cal_switched: "Bytt till {label}",
 
         set_title: "Inställningar", set_lang: "Språk", set_cycle: "Cykelinställningar", set_renew: "Förnya idag",
         set_date: "Startdatum", set_date_hint: "Ändring av datum startar en ny cykel.",
@@ -209,6 +217,7 @@ export const I18N = {
         set_ticket_at_least_one: "Minst en biljett krävs", set_ticket_deleted: "Borttagen",
         set_summer_ticket: "Sommarbiljett", set_monthly_ticket: "Måndadsbiljett",
         set_ticket_added: "Tillagd", set_summer_badge: "☀️ Sommar", set_monthly_badge: "📅 Månads", set_current: "Aktuell",
+        set_ticket_name_label: "Biljettnamn", set_ticket_name_placeholder: "Ange biljettnamn",
 
         pay_title: "Swish Betalning", pay_scan: "Skanna för att betala", pay_open: "Öppna Swish",
         pay_save: "Spara QR-bild", pay_err_no_phone: "Vänligen konfigurera Swish-nummer i inställningar först.",

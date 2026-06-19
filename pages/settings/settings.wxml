@@ -132,3 +132,23 @@
         </view>
     </view>
 </view>
+
+<!-- Add Ticket Name Modal -->
+<view class="modal-mask" wx:if="{{showTicketNameModal}}" bindtap="cancelAddTicket">
+    <view class="modal-container" catchtap="noop">
+        <view class="modal-header">
+            <text class="text-lg">{{newTicketType === 'summer' ? t.set_summer_ticket : t.set_monthly_ticket}}</text>
+            <view class="close-btn" bindtap="cancelAddTicket">x</view>
+        </view>
+        <view class="modal-body">
+            <view class="form-group">
+                <text class="form-label">{{t.set_ticket_name_label || '票名称'}}</text>
+                <input class="form-input" value="{{newTicketName}}" bindinput="onTicketNameInput" placeholder="{{t.set_ticket_name_placeholder || '输入票名称'}}" focus="{{showTicketNameModal}}" />
+            </view>
+        </view>
+        <view class="modal-footer">
+            <button class="btn btn-secondary" bindtap="cancelAddTicket">{{t.ord_cancel}}</button>
+            <button class="btn btn-primary" bindtap="confirmAddTicket">{{t.ord_confirm}}</button>
+        </view>
+    </view>
+</view>

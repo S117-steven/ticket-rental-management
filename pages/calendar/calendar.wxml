@@ -7,8 +7,29 @@
             <view class="text-sm px-2 py-1 bg-slate-100 rounded" bindtap="nextCycle" hover-class="hover-effect"><text>&gt;</text></view>
         </view>
     </view>
-    
-    <view class="flex flex-col gap-4">
+
+    <!-- Ticket Switcher -->
+    <view wx:if="{{tickets.length > 1}}" class="ticket-tabs mb-6">
+        <view wx:for="{{tickets}}" wx:key="id"
+              class="ticket-tab {{item.id === activeTicketId ? 'ticket-tab-active' : ''}}"
+              bindtap="switchTicket" data-id="{{item.id}}">
+            <text>{{item.label}}</text>
+            <text wx:if="{{item.type === 'summer'}}" class="summer-badge">☀️</text>
+            <text wx:else class="monthly-badge">📅</text>
+        </view>
+    </view>
+
+    <!-- Empty State - No Active Ticket -->
+    <view wx:if="{{!hasActiveTicket}}" class="empty-state">
+        <view class="empty-icon">📅</view>
+        <text class="empty-text">{{t.cal_no_ticket || '请先在设置中创建票'}}</text>
+        <navigator url="/pages/settings/settings" open-type="switchTab" class="empty-action">
+            <text class="text-blue-600 font-bold">{{t.cal_go_settings || '前往设置'}}</text>
+        </navigator>
+    </view>
+
+    <!-- Calendar Days -->
+    <view wx:if="{{hasActiveTicket}}" class="flex flex-col gap-4">
         <block wx:for="{{days}}" wx:key="dateValue">
             <view class="card p-4 flex justify-between items-center {{item.status.className}}" bindtap="onDayTap" data-type="{{item.status.type}}" data-order-id="{{item.orderId}}" data-date="{{item.dateValue}}" hover-class="hover-effect">
                 <view class="flex items-center gap-6">

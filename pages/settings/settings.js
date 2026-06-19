@@ -14,7 +14,10 @@ Page({
         showEditModal: false,
         tickets: [],
         activeTicketId: '',
-        activePriceMatrix: null
+        activePriceMatrix: null,
+        showTicketNameModal: false,
+        newTicketType: '',
+        newTicketName: ''
     },
 
     onShow() {
@@ -118,11 +121,33 @@ Page({
         const type = e.currentTarget.dataset.type;
         const config = this.data.config;
         const lang = config.language;
-        const defaults = Logic.getTicketDefaults(type);
-        const ticketId = Logic.uuid();
-        const label = type === 'summer' 
+        const defaultName = type === 'summer' 
             ? (t('set_summer_ticket', null, lang) || '夏季票')
             : `${t('set_monthly_ticket', null, lang) || '月票'} #${config.tickets.length + 1}`;
+        
+        this.setData({
+            showTicketNameModal: true,
+            newTicketType: type,
+            newTicketName: defaultName
+        });
+    },
+
+    onTicketNameInput(e) {
+        this.setData({ newTicketName: e.detail.value });
+    },
+
+    confirmAddTicket() {
+        const type = this.data.newTicketType;
+        const label = this.data.newTicketName.trim();
+        const config = this.data.config;
+        const lang = config.language;
+        const defaults = Logic.getTicketDefaults(type);
+        const ticketId = Logic.uuid();
+
+        if (!label) {
+            wx.showToast({ title: t('set_err_name_required', null, lang) || '请输入名称', icon: 'none' });
+            return;
+        }
 
         const newTicket = {
             id: ticketId,
@@ -143,8 +168,13 @@ Page({
             activeTicketId: ticketId
         };
         app.updateConfig(newConfig);
+        this.setData({ showTicketNameModal: false, newTicketType: '', newTicketName: '' });
         this.initData();
-        wx.showToast({ title: t('set_ticket_added', null, lang) || '已添加', icon: 'success' });
+        wx.showToast({ title: `${t('set_ticket_added', null, lang) || '已添加'}「${label}」`, icon: 'success' });
+    },
+
+    cancelAddTicket() {
+        this.setData({ showTicketNameModal: false, newTicketType: '', newTicketName: '' });
     },
 
     switchTicket(e) {

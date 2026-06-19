@@ -4,3 +4,67 @@
 .cal-item-past { border-left: 8rpx solid #94A3B8; background-color: #F8FAFC; opacity: 0.6; }
 .cal-item-free { border-left: 8rpx solid #D1FAE5; background-color: #ffffff; }
 .cal-item-occupied { border-left: 8rpx solid #93C5FD; background-color: #EFF6FF; }
+
+/* Ticket Switcher */
+.ticket-tabs {
+  display: flex;
+  gap: 16rpx;
+  overflow-x: auto;
+  padding: 8rpx 0;
+}
+
+.ticket-tab {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 16rpx 24rpx;
+  background-color: #F1F5F9;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #64748B;
+  white-space: nowrap;
+  border: 2rpx solid transparent;
+}
+
+.ticket-tab-active {
+  background-color: #EFF6FF;
+  color: #2563EB;
+  border-color: #93C5FD;
+}
+
+.summer-badge {
+  font-size: 24rpx;
+}
+
+.monthly-badge {
+  font-size: 24rpx;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 40rpx;
+  gap: 24rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #94A3B8;
+  text-align: center;
+}
+
+.empty-action {
+  margin-top: 16rpx;
+  padding: 16rpx 32rpx;
+  background-color: #EFF6FF;
+  border-radius: 16rpx;
+}

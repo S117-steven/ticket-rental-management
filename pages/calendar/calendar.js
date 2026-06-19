@@ -10,7 +10,11 @@ Page({
         editingOrder: null,
         presetDate: '',
         cycleOffset: 0,
-        _dirty: true
+        _dirty: true,
+        tickets: [],
+        activeTicketId: '',
+        activeTicket: null,
+        hasActiveTicket: false
     },
 
     onShow() {
@@ -26,8 +30,38 @@ Page({
     },
 
     initData() {
+        const config = app.globalData.config;
+        const tickets = config.tickets || [];
+        const activeTicketId = config.activeTicketId || '';
+        const activeTicket = Logic.getActiveTicket(config);
+        const hasActiveTicket = !!activeTicket;
+        
+        this.setData({ tickets, activeTicketId, activeTicket, hasActiveTicket });
         this.updateI18n();
         this.renderCalendar();
+    },
+
+    switchTicket(e) {
+        const ticketId = e.currentTarget.dataset.id;
+        const config = app.globalData.config;
+        config.activeTicketId = ticketId;
+        app.updateConfig(config);
+        
+        const activeTicket = Logic.getActiveTicket(config);
+        this.setData({ 
+            activeTicketId: ticketId, 
+            activeTicket,
+            hasActiveTicket: !!activeTicket,
+            cycleOffset: 0
+        });
+        this.renderCalendar();
+        
+        const lang = config.language;
+        wx.showToast({ 
+            title: t('cal_switched', { label: activeTicket.label }, lang) || `已切换到 ${activeTicket.label}`, 
+            icon: 'success',
+            duration: 1000
+        });
     },
 
     updateI18n() {

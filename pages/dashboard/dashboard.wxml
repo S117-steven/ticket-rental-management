@@ -8,13 +8,21 @@
   </view>
 
   <!-- Ticket Switcher / Current Ticket -->
-  <view class="ticket-tabs mb-6">
+  <view wx:if="{{tickets.length > 1}}" class="ticket-tabs mb-6">
     <view wx:for="{{tickets}}" wx:key="id"
           class="ticket-tab {{item.id === activeTicketId ? 'ticket-tab-active' : ''}}"
           bindtap="switchTicket" data-id="{{item.id}}">
       <text>{{item.label}}</text>
       <text wx:if="{{item.type === 'summer'}}" class="summer-badge">☀️</text>
+      <text wx:else class="monthly-badge">📅</text>
     </view>
+  </view>
+
+  <!-- Single Ticket Info -->
+  <view wx:if="{{tickets.length === 1 && activeTicket}}" class="single-ticket-info mb-6">
+    <text class="text-sm text-gray-500">{{activeTicket.label}}</text>
+    <text wx:if="{{activeTicket.type === 'summer'}}" class="text-sm ml-2">☀️</text>
+    <text wx:else class="text-sm ml-2">📅</text>
   </view>
 
   <!-- Summer Ticket Cost -->
@@ -30,7 +38,7 @@
   </view>
 
   <!-- Stats Grid -->
-  <view class="grid grid-cols-2 gap-4 mb-8">
+  <view wx:if="{{stats}}" class="grid grid-cols-2 gap-4 mb-8">
     <!-- Sends -->
     <view class="card p-4 flex flex-col justify-between" style="min-height: 200rpx;">
        <view class="flex justify-between items-start">

@@ -103,6 +103,19 @@
   font-size: 24rpx;
 }
 
+.monthly-badge {
+  font-size: 24rpx;
+}
+
+.single-ticket-info {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 16rpx;
+  background-color: #F8FAFC;
+  border-radius: 12rpx;
+}
+
 /* Summer Ticket Cost Card */
 .summer-cost-card {
   background-color: #FFFBEB;
