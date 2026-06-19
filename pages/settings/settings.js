@@ -1,5 +1,5 @@
 const app = getApp();
-import { Logic, TicketType } from '../../utils/util';
+import { Logic, TicketType, OrderStatus } from '../../utils/util';
 import { t } from '../../utils/i18n';
 
 Page({
@@ -117,9 +117,12 @@ Page({
     addTicket(e) {
         const type = e.currentTarget.dataset.type;
         const config = this.data.config;
+        const lang = config.language;
         const defaults = Logic.getTicketDefaults(type);
         const ticketId = Logic.uuid();
-        const label = type === 'summer' ? '夏季票' : `月票 #${config.tickets.length + 1}`;
+        const label = type === 'summer' 
+            ? (t('set_summer_ticket', null, lang) || '夏季票')
+            : `${t('set_monthly_ticket', null, lang) || '月票'} #${config.tickets.length + 1}`;
 
         const newTicket = {
             id: ticketId,
@@ -141,7 +144,7 @@ Page({
         };
         app.updateConfig(newConfig);
         this.initData();
-        wx.showToast({ title: '已添加', icon: 'success' });
+        wx.showToast({ title: t('set_ticket_added', null, lang) || '已添加', icon: 'success' });
     },
 
     switchTicket(e) {
@@ -182,7 +185,7 @@ Page({
                     const orders = app.globalData.orders || [];
                     const updatedOrders = orders.map(o => {
                         if (o.ticketId === ticketId) {
-                            return { ...o, status: 'Cancelled', cancelledAt: Date.now() };
+                            return { ...o, status: OrderStatus.CANCELLED, cancelledAt: Date.now() };
                         }
                         return o;
                     });
@@ -231,7 +234,9 @@ Page({
                                 if (!Array.isArray(data.users) || !Array.isArray(data.orders)) {
                                     throw new Error('Invalid format');
                                 }
-                                if (typeof data.config.cycleStartDate !== 'number' || !data.config.priceMatrix) {
+                                const isV2 = data.config.version >= 2 && Array.isArray(data.config.tickets);
+                                const isV1 = typeof data.config.cycleStartDate === 'number' && data.config.priceMatrix;
+                                if (!isV2 && !isV1) {
                                     throw new Error('Invalid format');
                                 }
                                 app.globalData.users = data.users;

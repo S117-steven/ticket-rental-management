@@ -167,7 +167,9 @@ Component({
 
         getCustomerOptions(query = '') {
             const lang = app.globalData.config.language;
-            const cycleStart = app.globalData.config.cycleStartDate;
+            const activeTicket = Logic.getActiveTicket(app.globalData.config);
+            const cycleStart = activeTicket ? activeTicket.cycleStartDate : 0;
+            const cycleEnd = activeTicket ? Logic.getTicketCycleEnd(activeTicket) : 0;
             const effectiveOrders = Logic.getEffectiveOrders(app.globalData.orders || []);
             const normalizedQuery = String(query || '').trim().toLowerCase();
 
@@ -176,7 +178,7 @@ Component({
                     const orderCount = effectiveOrders.filter(o =>
                         o.userId === user.id &&
                         o.startTime >= cycleStart &&
-                        o.startTime <= Logic.getCycleEnd(cycleStart)
+                        o.startTime <= cycleEnd
                     ).length;
                     const historyCount = orderCount + Logic.getCycleUsageOffset(user, cycleStart);
                     const initial = user.pinyinInitial || Logic.getPinyinInitial(user.name || user.phone || '');
@@ -457,12 +459,12 @@ Component({
             const alarmOffset = minutesBefore * 60;
             const lang = app.globalData.config.language;
             const config = app.globalData.config;
-            const cycleEnd = Logic.getCycleEnd(config.cycleStartDate);
+            const activeTicket = Logic.getActiveTicket(config);
+            const cycleEnd = activeTicket ? Logic.getTicketCycleEnd(activeTicket) : Logic.getCycleEnd(config.cycleStartDate);
             const endTs = Logic.getCalculatedEndTime(startTs, duration, cycleEnd);
             const durationStr = t(Logic.getDurationI18nKey(duration), null, lang);
             const titlePrefix = t('cal_event_title', null, lang);
             const phoneLabel = t('dash_cal_phone', null, lang);
-            const locationLabel = t('cal_edit_order', null, lang);
 
             wx.addPhoneCalendar({
                 title: `${titlePrefix}: ${name} (${durationStr})`,

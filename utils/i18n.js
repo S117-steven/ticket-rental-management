@@ -37,6 +37,8 @@ export const I18N = {
         set_tickets_title: "票据管理", set_confirm_delete_ticket: "确认删除",
         set_delete_ticket_confirm: "确定要删除这张票吗？关联的订单将被取消。",
         set_ticket_at_least_one: "至少保留一张票", set_ticket_deleted: "已删除",
+        set_summer_ticket: "夏季票", set_monthly_ticket: "月票",
+        set_ticket_added: "已添加", set_summer_badge: "☀️ 夏季票", set_monthly_badge: "📅 月票", set_current: "当前",
 
         pay_title: "Swish 支付", pay_scan: "请扫描二维码支付", pay_open: "打开 Swish App",
         pay_save: "保存二维码图片", pay_err_no_phone: "请先在设置中配置 Swish 手机号",
@@ -120,6 +122,8 @@ export const I18N = {
         set_tickets_title: "Ticket Management", set_confirm_delete_ticket: "Confirm Delete",
         set_delete_ticket_confirm: "Are you sure you want to delete this ticket? Associated orders will be cancelled.",
         set_ticket_at_least_one: "At least one ticket required", set_ticket_deleted: "Deleted",
+        set_summer_ticket: "Summer Ticket", set_monthly_ticket: "Monthly Ticket",
+        set_ticket_added: "Added", set_summer_badge: "☀️ Summer", set_monthly_badge: "📅 Monthly", set_current: "Current",
 
         pay_title: "Swish Payment", pay_scan: "Scan to pay", pay_open: "Open Swish",
         pay_save: "Save QR Image", pay_err_no_phone: "Please configure Swish number in Settings first.",
@@ -203,6 +207,8 @@ export const I18N = {
         set_tickets_title: "Biljetthantering", set_confirm_delete_ticket: "Bekräfta borttagning",
         set_delete_ticket_confirm: "Är du säker på att du vill ta bort denna biljett? Kopplade ordrar kommer att avbrytas.",
         set_ticket_at_least_one: "Minst en biljett krävs", set_ticket_deleted: "Borttagen",
+        set_summer_ticket: "Sommarbiljett", set_monthly_ticket: "Måndadsbiljett",
+        set_ticket_added: "Tillagd", set_summer_badge: "☀️ Sommar", set_monthly_badge: "📅 Månads", set_current: "Aktuell",
 
         pay_title: "Swish Betalning", pay_scan: "Skanna för att betala", pay_open: "Öppna Swish",
         pay_save: "Spara QR-bild", pay_err_no_phone: "Vänligen konfigurera Swish-nummer i inställningar först.",

@@ -14,15 +14,28 @@
     </view>
 
     <view class="setting-card">
-        <view class="setting-title mb-4">🎫 {{t.set_tickets_title || '票据管理'}}</view>
+        <view class="setting-title mb-4">🎫 {{t.set_tickets_title}}</view>
         <view class="ticket-list">
             <view wx:for="{{tickets}}" wx:key="id" class="ticket-item {{item.id === activeTicketId ? 'ticket-item-active' : ''}}">
                 <view class="ticket-info" bindtap="switchTicket" data-id="{{item.id}}">
                     <view class="ticket-label">
                         <text class="ticket-name">{{item.label}}</text>
-                        <text wx:if="{{item.type === 'summer'}}" class="ticket-type-badge summer">☀️ 夏季票</text>
-                        <text wx:else class="ticket-type-badge monthly">📅 月票</text>
+                        <text wx:if="{{item.type === 'summer'}}" class="ticket-type-badge summer">{{t.set_summer_badge}}</text>
+                        <text wx:else class="ticket-type-badge monthly">{{t.set_monthly_badge}}</text>
                     </view>
+                    <text class="ticket-date">{{item.cycleStartDateStr}}</text>
+                </view>
+                <view class="ticket-actions">
+                    <text wx:if="{{item.id === activeTicketId}}" class="active-badge">{{t.set_current}}</text>
+                    <text class="delete-btn" bindtap="deleteTicket" data-id="{{item.id}}">🗑️</text>
+                </view>
+            </view>
+        </view>
+        <view class="flex gap-4 mt-4">
+            <button class="btn btn-secondary flex-1" bindtap="addTicket" data-type="monthly" hover-class="hover-effect">+ {{t.set_monthly_ticket}}</button>
+            <button class="btn btn-secondary flex-1" bindtap="addTicket" data-type="summer" hover-class="hover-effect">+ {{t.set_summer_ticket}}</button>
+        </view>
+    </view>
                     <text class="ticket-date">{{item.cycleStartDateStr}}</text>
                 </view>
                 <view class="ticket-actions">

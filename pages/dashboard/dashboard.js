@@ -115,7 +115,12 @@ Page({
         const maxSends = Logic.getTicketMaxSends(activeTicket);
         const maxUsers = Logic.getTicketMaxUsers(activeTicket);
         
-        const stats = cachedStats || Logic.calculateStats(ticketOrders, { ...config, cycleStartDate: cycleStart }, app.globalData.users);
+        const statsConfig = {
+            ...config,
+            cycleStartDate: cycleStart,
+            initialUsageOffset: activeTicket.initialUsageOffset || { sends: 0, users: 0, cycleId: 0 }
+        };
+        const stats = cachedStats || Logic.calculateStats(ticketOrders, statsConfig, app.globalData.users);
         const now = Date.now();
 
         const recentOrders = [...ticketOrders]
