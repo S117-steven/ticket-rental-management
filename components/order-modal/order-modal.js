@@ -374,8 +374,10 @@ Component({
             const ticketConfig = {
                 ...config,
                 cycleStartDate: activeTicket.cycleStartDate,
+                cycleEnd: cycleEnd,
                 maxSends: Logic.getTicketMaxSends(activeTicket),
-                maxUsers: Logic.getTicketMaxUsers(activeTicket)
+                maxUsers: Logic.getTicketMaxUsers(activeTicket),
+                initialUsageOffset: activeTicket.initialUsageOffset || { sends: 0, users: 0, cycleId: 0 }
             };
 
             const validation = Logic.validateOrder(

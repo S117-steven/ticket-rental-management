@@ -118,6 +118,7 @@ Page({
         const statsConfig = {
             ...config,
             cycleStartDate: cycleStart,
+            cycleEnd: cycleEnd,
             initialUsageOffset: activeTicket.initialUsageOffset || { sends: 0, users: 0, cycleId: 0 }
         };
         const stats = cachedStats || Logic.calculateStats(ticketOrders, statsConfig, app.globalData.users);

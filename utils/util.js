@@ -42,10 +42,14 @@ export const TICKET_DEFAULTS = {
         cost: 0
     },
     summer: {
-        cycleDays: 60,
+        cycleDays: 62,
         maxSends: 31,
         maxUsers: 5,
-        cost: 595
+        cost: 595,
+        startMonth: 6,
+        startDay: 15,
+        endMonth: 8,
+        endDay: 15
     }
 };
 
@@ -213,7 +217,21 @@ export const Logic = {
     },
 
     getTicketCycleEnd: (ticket) => {
-        const days = Logic.getTicketCycleDays(ticket);
+        const defaults = Logic.getTicketDefaults(ticket.type);
+        
+        if (ticket.type === 'summer' && defaults.startMonth && defaults.endMonth) {
+            const startDate = new Date(ticket.cycleStartDate);
+            const year = startDate.getFullYear();
+            const endDate = new Date(year, defaults.endMonth - 1, defaults.endDay, 23, 59, 59, 999);
+            
+            if (endDate.getTime() <= ticket.cycleStartDate) {
+                endDate.setFullYear(year + 1);
+            }
+            
+            return endDate.getTime();
+        }
+        
+        const days = defaults.cycleDays;
         const d = new Date(ticket.cycleStartDate);
         d.setDate(d.getDate() + days);
         d.setHours(23, 59, 59, 999);
@@ -298,7 +316,7 @@ export const Logic = {
 
     calculateStats: (orders, config, users = []) => {
         const cycleStart = config.cycleStartDate;
-        const cycleEnd = Logic.getCycleEnd(cycleStart);
+        const cycleEnd = config.cycleEnd || Logic.getCycleEnd(cycleStart);
         const cycleOrders = Logic.getEffectiveOrders(orders).filter(o =>
             o.startTime >= cycleStart && o.startTime <= cycleEnd
         );
@@ -343,7 +361,7 @@ export const Logic = {
         if (!newOrder.startTime || !newOrder.endTime) return { valid: false, reason: "ord_err_time" };
 
         const cycleStart = config.cycleStartDate;
-        const cycleEnd = Logic.getCycleEnd(cycleStart);
+        const cycleEnd = config.cycleEnd || Logic.getCycleEnd(cycleStart);
         const maxSends = config.maxSends || MAX_SENDS_PER_CYCLE;
         const maxUsers = config.maxUsers || MAX_USERS_PER_CYCLE;
 
@@ -375,12 +393,12 @@ export const Logic = {
             return { valid: false, reason: "ord_err_users" };
         }
 
-        const hasOverlap = effectiveOrders.some(o => (newOrder.startTime < o.endTime) && (newOrder.endTime > o.startTime));
+        const hasOverlap = effectiveOrders.some(o => (newOrder.startTime < o.endTime) && (adjustedEndTime > o.startTime));
         if (hasOverlap) return { valid: false, reason: "ord_err_overlap" };
 
         const isDayOccupied = effectiveOrders.some(o => Logic.isSameDay(o.startTime, newOrder.startTime));
         if (isDayOccupied) return { valid: false, reason: "ord_err_freq" };
 
-        return { valid: true };
+        return { valid: true, adjustedEndTime };
     }
 };
