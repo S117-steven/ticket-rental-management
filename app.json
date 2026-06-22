@@ -3,7 +3,8 @@
     "pages/dashboard/dashboard",
     "pages/calendar/calendar",
     "pages/settings/settings",
-    "pages/onboarding/onboarding"
+    "pages/onboarding/onboarding",
+    "pages/customer-history/customer-history"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -26,6 +26,10 @@ export const I18N = {
         cal_no_ticket: "请先在设置中创建票", cal_go_settings: "前往设置",
         cal_switched: "已切换到 {label}",
 
+        ch_title: "客户详情", ch_total_orders: "总订单数", ch_total_amount: "总消费",
+        ch_avg_amount: "平均消费", ch_first_order: "首次订单", ch_last_order: "最近订单",
+        ch_no_orders: "暂无订单记录", ch_order_history: "订单历史",
+
         set_title: "设置", set_lang: "语言设置", set_cycle: "周期设置", set_renew: "今天续费",
         set_date: "月票激活日期", set_date_hint: "修改日期将开启新周期，且会清空旧的初始配额。",
         set_price: "价格矩阵 (kr)", set_save: "保存修改", set_renew_success: "已续费",
@@ -116,6 +120,10 @@ export const I18N = {
         cal_no_ticket: "Please create a ticket in Settings first", cal_go_settings: "Go to Settings",
         cal_switched: "Switched to {label}",
 
+        ch_title: "Customer Details", ch_total_orders: "Total Orders", ch_total_amount: "Total Spent",
+        ch_avg_amount: "Average", ch_first_order: "First Order", ch_last_order: "Last Order",
+        ch_no_orders: "No order records", ch_order_history: "Order History",
+
         set_title: "Settings", set_lang: "Language", set_cycle: "Cycle Settings", set_renew: "Renew Today",
         set_date: "Activation Date", set_date_hint: "Changing date starts a new cycle and clears old initial quotas.",
         set_price: "Price Matrix (kr)", set_save: "Save Changes", set_renew_success: "Renewed",
@@ -205,6 +213,10 @@ export const I18N = {
         cal_create_here: "Boka här", cal_edit_order: "Redigera", cal_event_title: "Biljettuthyrning",
         cal_no_ticket: "Vänligen skapa en biljett i Inställningar först", cal_go_settings: "Gå till Inställningar",
         cal_switched: "Bytt till {label}",
+
+        ch_title: "Kunddetaljer", ch_total_orders: "Totalt ordrar", ch_total_amount: "Totalt spenderat",
+        ch_avg_amount: "Genomsnitt", ch_first_order: "Första order", ch_last_order: "Senaste order",
+        ch_no_orders: "Inga orderhistorik", ch_order_history: "Orderhistorik",
 
         set_title: "Inställningar", set_lang: "Språk", set_cycle: "Cykelinställningar", set_renew: "Förnya idag",
         set_date: "Startdatum", set_date_hint: "Ändring av datum startar en ny cykel.",

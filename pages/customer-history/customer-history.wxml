@@ -1,0 +1,56 @@
+<view class="container px-6 py-4">
+    <!-- Customer Info -->
+    <view class="card p-4 mb-6">
+        <view class="flex items-center gap-4">
+            <view class="customer-avatar">
+                <text class="text-2xl">👤</text>
+            </view>
+            <view>
+                <text class="text-xl font-bold">{{customer.name}}</text>
+                <text class="text-sm text-gray-500 mt-1">{{customer.phone}}</text>
+            </view>
+        </view>
+    </view>
+
+    <!-- Stats -->
+    <view class="grid grid-cols-2 gap-4 mb-6">
+        <view class="card p-4">
+            <text class="text-xs text-gray-500">{{t.ch_total_orders}}</text>
+            <text class="text-2xl font-bold text-blue-600">{{stats.totalOrders}}</text>
+        </view>
+        <view class="card p-4">
+            <text class="text-xs text-gray-500">{{t.ch_total_amount}}</text>
+            <text class="text-2xl font-bold text-green-600">{{stats.totalAmount}} kr</text>
+        </view>
+        <view class="card p-4">
+            <text class="text-xs text-gray-500">{{t.ch_avg_amount}}</text>
+            <text class="text-2xl font-bold text-purple-600">{{stats.avgAmount}} kr</text>
+        </view>
+        <view class="card p-4">
+            <text class="text-xs text-gray-500">{{t.ch_first_order}}</text>
+            <text class="text-sm font-bold">{{stats.firstOrderDate}}</text>
+        </view>
+    </view>
+
+    <!-- Order List -->
+    <view class="card">
+        <view class="p-4 border-b">
+            <text class="text-lg font-bold">{{t.ch_order_history}}</text>
+        </view>
+        <view wx:if="{{orders.length === 0}}" class="p-8 text-center">
+            <text class="text-gray-400">{{t.ch_no_orders}}</text>
+        </view>
+        <view wx:for="{{orders}}" wx:key="id" class="p-4 border-b">
+            <view class="flex justify-between items-center">
+                <view>
+                    <text class="font-bold">{{item.startTimeStr}}</text>
+                    <text class="text-sm text-gray-500 mt-1 block">{{item.durationType}}</text>
+                </view>
+                <view class="text-right">
+                    <text class="text-lg font-bold text-green-600">{{item.price}} kr</text>
+                    <text class="text-xs block mt-1 {{item.displayStatus === 'Active' ? 'text-green-600' : (item.displayStatus === 'Cancelled' ? 'text-red-400' : 'text-gray-400')}}">{{item.displayStatus}}</text>
+                </view>
+            </view>
+        </view>
+    </view>
+</view>

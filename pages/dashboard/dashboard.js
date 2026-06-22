@@ -157,6 +157,7 @@ Page({
             const uid = o.userId;
             if (!userMap[uid]) {
                 userMap[uid] = {
+                    id: uid,
                     name: o.userParams.name || t('dash_unknown', null, lang),
                     phone: o.userParams.phone || '',
                     count: 0,
@@ -172,6 +173,7 @@ Page({
             if (offsetCount <= 0) return;
             if (!userMap[user.id]) {
                 userMap[user.id] = {
+                    id: user.id,
                     name: user.name || t('dash_unknown', null, lang),
                     phone: user.phone || '',
                     count: 0,
@@ -235,6 +237,13 @@ Page({
         this.setData({
             showUserDetailsModal: !this.data.showUserDetailsModal
         });
+    },
+
+    goToCustomerHistory(e) {
+        const customerId = e.currentTarget.dataset.id;
+        if (customerId) {
+            wx.navigateTo({ url: `/pages/customer-history/customer-history?id=${customerId}` });
+        }
     },
 
     loadMoreOrders() {
