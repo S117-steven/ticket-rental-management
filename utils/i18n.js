@@ -14,6 +14,8 @@ export const I18N = {
         dash_caught_up: "一切安排就绪！新预订将显示在此处。",
         dash_manual_booking: "+ 手动录入订单",
         dash_summer_cost: "购票成本", dash_profit: "净利润",
+        dash_revenue_summary: "收入概览", dash_today: "今日", dash_this_week: "本周",
+        dash_this_month: "本月", dash_this_cycle: "本周期",
         status_active: "进行中", status_pending: "待开始", status_completed: "已结束", status_cancelled: "已取消",
         label_send: "发票", label_return: "归还",
 
@@ -102,6 +104,8 @@ export const I18N = {
         dash_caught_up: "You're all caught up! New bookings will appear here.",
         dash_manual_booking: "+ Create Manual Booking",
         dash_summer_cost: "Ticket Cost", dash_profit: "Profit",
+        dash_revenue_summary: "Revenue Summary", dash_today: "Today", dash_this_week: "This Week",
+        dash_this_month: "This Month", dash_this_cycle: "This Cycle",
         status_active: "Active", status_pending: "Pending", status_completed: "Done", status_cancelled: "Cancelled",
         label_send: "Send", label_return: "Return",
 
@@ -190,6 +194,8 @@ export const I18N = {
         dash_caught_up: "Du är helt uppdaterad! Nya bokningar visas här.",
         dash_manual_booking: "+ Lägg till manuell bokning",
         dash_summer_cost: "Biljettkostnad", dash_profit: "Vinst",
+        dash_revenue_summary: "Intäktssammanfattning", dash_today: "Idag", dash_this_week: "Denna vecka",
+        dash_this_month: "Denna månad", dash_this_cycle: "Denna cykel",
         status_active: "Aktiv", status_pending: "Väntande", status_completed: "Klar", status_cancelled: "Avbruten",
         label_send: "Skicka", label_return: "Retur",
 

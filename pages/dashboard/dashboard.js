@@ -23,7 +23,13 @@ Page({
         showPayment: false,
         showUserDetailsModal: false,
         userDetails: [],
-        _dirty: true
+        _dirty: true,
+        revenueStats: {
+            today: 0,
+            thisWeek: 0,
+            thisMonth: 0,
+            thisCycle: 0
+        }
     },
 
     onShow() {
@@ -73,7 +79,9 @@ Page({
             'pay_title', 'pay_scan', 'pay_save', 'pay_err_no_phone',
             'dash_updated_now', 'dash_view_all', 'dash_caught_up',
             'dash_manual_booking', 'dash_success', 'dash_view_details',
-            'dash_user_details_title', 'dash_order_count', 'dash_close'
+            'dash_user_details_title', 'dash_order_count', 'dash_close',
+            'dash_revenue_summary', 'dash_today', 'dash_this_week',
+            'dash_this_month', 'dash_this_cycle'
         ];
         const strings = {};
         keys.forEach(k => strings[k] = t(k, null, lang));
@@ -197,6 +205,18 @@ Page({
             nextOrderRaw = nextOrder;
         }
 
+        // Calculate revenue statistics
+        const todayStart = new Date().setHours(0, 0, 0, 0);
+        const weekStart = todayStart - (new Date().getDay() * 24 * 60 * 60 * 1000);
+        const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime();
+
+        const revenueStats = {
+            today: cycleOrders.filter(o => o.startTime >= todayStart).reduce((sum, o) => sum + o.price, 0),
+            thisWeek: cycleOrders.filter(o => o.startTime >= weekStart).reduce((sum, o) => sum + o.price, 0),
+            thisMonth: cycleOrders.filter(o => o.startTime >= monthStart).reduce((sum, o) => sum + o.price, 0),
+            thisCycle: stats.totalRevenue
+        };
+
         this.setData({
             stats: { ...stats, maxSends, maxUsers },
             orders: ticketOrders,
@@ -206,7 +226,8 @@ Page({
             userDetails,
             nextOrderText,
             nextOrderSub,
-            nextOrderRaw
+            nextOrderRaw,
+            revenueStats
         });
     },
 

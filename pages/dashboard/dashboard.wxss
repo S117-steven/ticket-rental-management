@@ -116,6 +116,15 @@
   border-radius: 12rpx;
 }
 
+.revenue-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  padding: 16rpx;
+  background-color: #F8FAFC;
+  border-radius: 12rpx;
+}
+
 /* Summer Ticket Cost Card */
 .summer-cost-card {
   background-color: #FFFBEB;

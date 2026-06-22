@@ -84,6 +84,31 @@
     </view>
   </view>
 
+  <!-- Revenue Summary -->
+  <view class="card p-4 mb-6">
+    <view class="flex justify-between items-center mb-4">
+      <text class="text-lg font-bold">{{t.dash_revenue_summary}}</text>
+    </view>
+    <view class="grid grid-cols-2 gap-4">
+      <view class="revenue-item">
+        <text class="text-xs text-gray-500">{{t.dash_today}}</text>
+        <text class="text-xl font-bold text-green-600">{{revenueStats.today}} kr</text>
+      </view>
+      <view class="revenue-item">
+        <text class="text-xs text-gray-500">{{t.dash_this_week}}</text>
+        <text class="text-xl font-bold text-blue-600">{{revenueStats.thisWeek}} kr</text>
+      </view>
+      <view class="revenue-item">
+        <text class="text-xs text-gray-500">{{t.dash_this_month}}</text>
+        <text class="text-xl font-bold text-purple-600">{{revenueStats.thisMonth}} kr</text>
+      </view>
+      <view class="revenue-item">
+        <text class="text-xs text-gray-500">{{t.dash_this_cycle}}</text>
+        <text class="text-xl font-bold text-orange-600">{{revenueStats.thisCycle}} kr</text>
+      </view>
+    </view>
+  </view>
+
   <!-- Next Reservation Section -->
   <view class="mb-8">
     <text class="text-lg mb-4" style="display: block;">{{t.dash_next}}</text>
