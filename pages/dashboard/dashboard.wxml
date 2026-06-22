@@ -8,7 +8,7 @@
   </view>
 
   <!-- Ticket Switcher / Current Ticket -->
-  <view wx:if="{{tickets.length > 1}}" class="ticket-tabs mb-6">
+  <view wx:if="{{tickets.length > 1}}" class="ticket-tabs {{isSwitching ? 'switching' : ''}} mb-6">
     <view wx:for="{{tickets}}" wx:key="id"
           class="ticket-tab {{item.id === activeTicketId ? 'ticket-tab-active' : ''}}"
           bindtap="switchTicket" data-id="{{item.id}}">
@@ -23,6 +23,29 @@
     <text class="text-sm text-gray-500">{{activeTicket.label}}</text>
     <text wx:if="{{activeTicket.type === 'summer'}}" class="text-sm ml-2">☀️</text>
     <text wx:else class="text-sm ml-2">📅</text>
+  </view>
+
+  <!-- Ticket Info Card -->
+  <view wx:if="{{activeTicket && stats}}" class="ticket-info-card mb-6">
+    <view class="flex justify-between items-center">
+      <view>
+        <text class="text-sm text-gray-500">{{t.dash_current_ticket}}</text>
+        <text class="text-lg font-bold">{{activeTicket.label}}</text>
+      </view>
+      <view class="ticket-type-badge {{activeTicket.type === 'summer' ? 'summer' : 'monthly'}}">
+        {{activeTicket.type === 'summer' ? '☀️ 夏季票' : '📅 月票'}}
+      </view>
+    </view>
+    <view class="flex justify-between items-center mt-4">
+      <view>
+        <text class="text-xs text-gray-500">{{t.dash_remaining_days}}</text>
+        <text class="text-2xl font-bold text-blue-600">{{stats.daysRemaining}}</text>
+      </view>
+      <view>
+        <text class="text-xs text-gray-500">{{t.dash_sends_used}}</text>
+        <text class="text-2xl font-bold text-green-600">{{stats.usedCount}}/{{stats.maxSends}}</text>
+      </view>
+    </view>
   </view>
 
   <!-- Summer Ticket Cost -->

@@ -38,7 +38,8 @@ Page({
             endDate: ''
         },
         showSearch: false,
-        filteredOrders: []
+        filteredOrders: [],
+        isSwitching: false
     },
 
     onShow() {
@@ -71,10 +72,29 @@ Page({
     switchTicket(e) {
         const ticketId = e.currentTarget.dataset.id;
         const config = app.globalData.config;
-        config.activeTicketId = ticketId;
-        app.updateConfig(config);
-        this.setData({ activeTicketId: ticketId, activeTicket: Logic.getActiveTicket(config) });
-        this.calculateStats();
+        
+        // 添加切换动画
+        this.setData({ isSwitching: true });
+        
+        setTimeout(() => {
+            config.activeTicketId = ticketId;
+            app.updateConfig(config);
+            
+            this.setData({ 
+                activeTicketId: ticketId, 
+                activeTicket: Logic.getActiveTicket(config),
+                isSwitching: false
+            });
+            this.calculateStats();
+            
+            // 显示切换反馈
+            const activeTicket = Logic.getActiveTicket(config);
+            wx.showToast({ 
+                title: `已切换到 ${activeTicket.label}`, 
+                icon: 'success',
+                duration: 1000
+            });
+        }, 200);
     },
 
     updateI18n() {
@@ -91,7 +111,8 @@ Page({
             'dash_user_details_title', 'dash_order_count', 'dash_close',
             'dash_revenue_summary', 'dash_today', 'dash_this_week',
             'dash_this_month', 'dash_this_cycle',
-            'dash_search_placeholder', 'dash_show_search', 'dash_hide_search'
+            'dash_search_placeholder', 'dash_show_search', 'dash_hide_search',
+            'dash_current_ticket', 'dash_remaining_days', 'dash_sends_used'
         ];
         const strings = {};
         keys.forEach(k => strings[k] = t(k, null, lang));
