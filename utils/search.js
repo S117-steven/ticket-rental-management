@@ -1,7 +1,7 @@
 export const SearchUtils = {
     /**
      * 搜索订单
-     * @param {Array} orders - 订单列表
+     * @param {Array} orders - 订单列表（需要包含 displayStatus 字段）
      * @param {string} query - 搜索关键词
      * @param {Object} filters - 筛选条件
      * @returns {Array} 过滤后的订单
@@ -19,9 +19,9 @@ export const SearchUtils = {
             });
         }
 
-        // 状态筛选
+        // 状态筛选（使用 displayStatus 而非 order.status）
         if (filters.status) {
-            result = result.filter(order => order.status === filters.status);
+            result = result.filter(order => order.displayStatus === filters.status);
         }
 
         // 日期范围筛选
@@ -35,18 +35,5 @@ export const SearchUtils = {
         }
 
         return result;
-    },
-
-    /**
-     * 获取订单状态列表
-     */
-    getStatusList() {
-        return [
-            { value: '', label: '全部' },
-            { value: 'Pending', label: '待开始' },
-            { value: 'Active', label: '进行中' },
-            { value: 'Completed', label: '已完成' },
-            { value: 'Cancelled', label: '已取消' }
-        ];
     }
 };

@@ -89,8 +89,9 @@ Page({
             
             // 显示切换反馈
             const activeTicket = Logic.getActiveTicket(config);
+            const lang = app.globalData.config.language;
             wx.showToast({ 
-                title: `已切换到 ${activeTicket.label}`, 
+                title: t('cal_switched', { label: activeTicket.label }, lang), 
                 icon: 'success',
                 duration: 1000
             });
@@ -112,7 +113,8 @@ Page({
             'dash_revenue_summary', 'dash_today', 'dash_this_week',
             'dash_this_month', 'dash_this_cycle',
             'dash_search_placeholder', 'dash_show_search', 'dash_hide_search',
-            'dash_current_ticket', 'dash_remaining_days', 'dash_sends_used'
+            'dash_current_ticket', 'dash_remaining_days', 'dash_sends_used',
+            'dash_all'
         ];
         const strings = {};
         keys.forEach(k => strings[k] = t(k, null, lang));
@@ -238,9 +240,11 @@ Page({
             nextOrderRaw = nextOrder;
         }
 
-        // Calculate revenue statistics
+        // Calculate revenue statistics (week starts on Monday)
         const todayStart = new Date().setHours(0, 0, 0, 0);
-        const weekStart = todayStart - (new Date().getDay() * 24 * 60 * 60 * 1000);
+        const dayOfWeek = new Date().getDay();
+        const mondayOffset = (dayOfWeek + 6) % 7; // Convert Sunday=0 to 6, Monday=1 to 0
+        const weekStart = todayStart - (mondayOffset * 24 * 60 * 60 * 1000);
         const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime();
 
         const revenueStats = {
@@ -262,6 +266,11 @@ Page({
             nextOrderRaw,
             revenueStats
         });
+
+        // 刷新搜索结果（如果搜索处于激活状态）
+        if (this.data.showSearch) {
+            this.performSearch();
+        }
     },
 
     toggleUserDetailsModal() {

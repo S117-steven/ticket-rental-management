@@ -33,7 +33,7 @@
         <text class="text-lg font-bold">{{activeTicket.label}}</text>
       </view>
       <view class="ticket-type-badge {{activeTicket.type === 'summer' ? 'summer' : 'monthly'}}">
-        {{activeTicket.type === 'summer' ? '☀️ 夏季票' : '📅 月票'}}
+        {{activeTicket.type === 'summer' ? '☀️ ' + t.set_summer_ticket : '📅 ' + t.set_monthly_ticket}}
       </view>
     </view>
     <view class="flex justify-between items-center mt-4">
@@ -166,13 +166,13 @@
     </view>
     <view class="filter-tags">
       <view class="filter-tag {{searchFilters.status === '' ? 'active' : ''}}" 
-            bindtap="onStatusFilter" data-status="">全部</view>
+            bindtap="onStatusFilter" data-status="">{{t.dash_all}}</view>
       <view class="filter-tag {{searchFilters.status === 'Pending' ? 'active' : ''}}" 
-            bindtap="onStatusFilter" data-status="Pending">待开始</view>
+            bindtap="onStatusFilter" data-status="Pending">{{t.status_pending}}</view>
       <view class="filter-tag {{searchFilters.status === 'Active' ? 'active' : ''}}" 
-            bindtap="onStatusFilter" data-status="Active">进行中</view>
+            bindtap="onStatusFilter" data-status="Active">{{t.status_active}}</view>
       <view class="filter-tag {{searchFilters.status === 'Completed' ? 'active' : ''}}" 
-            bindtap="onStatusFilter" data-status="Completed">已完成</view>
+            bindtap="onStatusFilter" data-status="Completed">{{t.status_completed}}</view>
     </view>
   </view>
 

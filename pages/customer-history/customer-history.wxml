@@ -17,6 +17,7 @@
         <view class="card p-4">
             <text class="text-xs text-gray-500">{{t.ch_total_orders}}</text>
             <text class="text-2xl font-bold text-blue-600">{{stats.totalOrders}}</text>
+            <text wx:if="{{stats.totalOrders !== stats.effectiveOrders}}" class="text-xs text-gray-400">({{stats.effectiveOrders}} {{t.ch_valid}})</text>
         </view>
         <view class="card p-4">
             <text class="text-xs text-gray-500">{{t.ch_total_amount}}</text>

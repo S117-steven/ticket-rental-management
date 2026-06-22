@@ -35,10 +35,14 @@ Page({
                 displayStatus: Logic.getDisplayStatus(o)
             }));
 
+        // 只计算有效订单（排除已取消的）
+        const effectiveOrders = orders.filter(o => o.status !== 'Cancelled');
+
         const stats = {
             totalOrders: orders.length,
-            totalAmount: orders.reduce((sum, o) => sum + o.price, 0),
-            avgAmount: orders.length > 0 ? Math.round(orders.reduce((sum, o) => sum + o.price, 0) / orders.length) : 0,
+            effectiveOrders: effectiveOrders.length,
+            totalAmount: effectiveOrders.reduce((sum, o) => sum + o.price, 0),
+            avgAmount: effectiveOrders.length > 0 ? Math.round(effectiveOrders.reduce((sum, o) => sum + o.price, 0) / effectiveOrders.length) : 0,
             firstOrderDate: orders.length > 0 ? orders[orders.length - 1].startTimeStr : '',
             lastOrderDate: orders.length > 0 ? orders[0].startTimeStr : ''
         };

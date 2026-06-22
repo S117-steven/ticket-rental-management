@@ -18,6 +18,7 @@ export const I18N = {
         dash_this_month: "本月", dash_this_cycle: "本周期",
         dash_search_placeholder: "搜索客户姓名或手机号", dash_show_search: "显示搜索", dash_hide_search: "隐藏搜索",
         dash_current_ticket: "当前票据", dash_remaining_days: "剩余天数", dash_sends_used: "已发送",
+        dash_all: "全部",
         status_active: "进行中", status_pending: "待开始", status_completed: "已结束", status_cancelled: "已取消",
         label_send: "发票", label_return: "归还",
 
@@ -30,7 +31,7 @@ export const I18N = {
 
         ch_title: "客户详情", ch_total_orders: "总订单数", ch_total_amount: "总消费",
         ch_avg_amount: "平均消费", ch_first_order: "首次订单", ch_last_order: "最近订单",
-        ch_no_orders: "暂无订单记录", ch_order_history: "订单历史",
+        ch_no_orders: "暂无订单记录", ch_order_history: "订单历史", ch_valid: "有效",
 
         set_title: "设置", set_lang: "语言设置", set_cycle: "周期设置", set_renew: "今天续费",
         set_date: "月票激活日期", set_date_hint: "修改日期将开启新周期，且会清空旧的初始配额。",
@@ -114,6 +115,7 @@ export const I18N = {
         dash_this_month: "This Month", dash_this_cycle: "This Cycle",
         dash_search_placeholder: "Search by customer name or phone", dash_show_search: "Show Search", dash_hide_search: "Hide Search",
         dash_current_ticket: "Current Ticket", dash_remaining_days: "Remaining Days", dash_sends_used: "Sends Used",
+        dash_all: "All",
         status_active: "Active", status_pending: "Pending", status_completed: "Done", status_cancelled: "Cancelled",
         label_send: "Send", label_return: "Return",
 
@@ -126,7 +128,7 @@ export const I18N = {
 
         ch_title: "Customer Details", ch_total_orders: "Total Orders", ch_total_amount: "Total Spent",
         ch_avg_amount: "Average", ch_first_order: "First Order", ch_last_order: "Last Order",
-        ch_no_orders: "No order records", ch_order_history: "Order History",
+        ch_no_orders: "No order records", ch_order_history: "Order History", ch_valid: "valid",
 
         set_title: "Settings", set_lang: "Language", set_cycle: "Cycle Settings", set_renew: "Renew Today",
         set_date: "Activation Date", set_date_hint: "Changing date starts a new cycle and clears old initial quotas.",
@@ -210,6 +212,7 @@ export const I18N = {
         dash_this_month: "Denna månad", dash_this_cycle: "Denna cykel",
         dash_search_placeholder: "Sök efter kundnamn eller telefon", dash_show_search: "Visa sökning", dash_hide_search: "Dölj sökning",
         dash_current_ticket: "Aktuell biljett", dash_remaining_days: "Återstående dagar", dash_sends_used: "Skickade",
+        dash_all: "Alla",
         status_active: "Aktiv", status_pending: "Väntande", status_completed: "Klar", status_cancelled: "Avbruten",
         label_send: "Skicka", label_return: "Retur",
 
@@ -222,7 +225,7 @@ export const I18N = {
 
         ch_title: "Kunddetaljer", ch_total_orders: "Totalt ordrar", ch_total_amount: "Totalt spenderat",
         ch_avg_amount: "Genomsnitt", ch_first_order: "Första order", ch_last_order: "Senaste order",
-        ch_no_orders: "Inga orderhistorik", ch_order_history: "Orderhistorik",
+        ch_no_orders: "Inga orderhistorik", ch_order_history: "Orderhistorik", ch_valid: "giltiga",
 
         set_title: "Inställningar", set_lang: "Språk", set_cycle: "Cykelinställningar", set_renew: "Förnya idag",
         set_date: "Startdatum", set_date_hint: "Ändring av datum startar en ny cykel.",
