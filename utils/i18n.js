@@ -16,6 +16,7 @@ export const I18N = {
         dash_summer_cost: "购票成本", dash_profit: "净利润",
         dash_revenue_summary: "收入概览", dash_today: "今日", dash_this_week: "本周",
         dash_this_month: "本月", dash_this_cycle: "本周期",
+        dash_search_placeholder: "搜索客户姓名或手机号", dash_show_search: "显示搜索", dash_hide_search: "隐藏搜索",
         status_active: "进行中", status_pending: "待开始", status_completed: "已结束", status_cancelled: "已取消",
         label_send: "发票", label_return: "归还",
 
@@ -110,6 +111,7 @@ export const I18N = {
         dash_summer_cost: "Ticket Cost", dash_profit: "Profit",
         dash_revenue_summary: "Revenue Summary", dash_today: "Today", dash_this_week: "This Week",
         dash_this_month: "This Month", dash_this_cycle: "This Cycle",
+        dash_search_placeholder: "Search by customer name or phone", dash_show_search: "Show Search", dash_hide_search: "Hide Search",
         status_active: "Active", status_pending: "Pending", status_completed: "Done", status_cancelled: "Cancelled",
         label_send: "Send", label_return: "Return",
 
@@ -204,6 +206,7 @@ export const I18N = {
         dash_summer_cost: "Biljettkostnad", dash_profit: "Vinst",
         dash_revenue_summary: "Intäktssammanfattning", dash_today: "Idag", dash_this_week: "Denna vecka",
         dash_this_month: "Denna månad", dash_this_cycle: "Denna cykel",
+        dash_search_placeholder: "Sök efter kundnamn eller telefon", dash_show_search: "Visa sökning", dash_hide_search: "Dölj sökning",
         status_active: "Aktiv", status_pending: "Väntande", status_completed: "Klar", status_cancelled: "Avbruten",
         label_send: "Skicka", label_return: "Retur",
 

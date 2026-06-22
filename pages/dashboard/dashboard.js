@@ -1,6 +1,7 @@
 const app = getApp();
 import { Logic, OrderStatus } from '../../utils/util';
 import { t } from '../../utils/i18n';
+import { SearchUtils } from '../../utils/search';
 
 Page({
     data: {
@@ -29,7 +30,15 @@ Page({
             thisWeek: 0,
             thisMonth: 0,
             thisCycle: 0
-        }
+        },
+        searchQuery: '',
+        searchFilters: {
+            status: '',
+            startDate: '',
+            endDate: ''
+        },
+        showSearch: false,
+        filteredOrders: []
     },
 
     onShow() {
@@ -81,7 +90,8 @@ Page({
             'dash_manual_booking', 'dash_success', 'dash_view_details',
             'dash_user_details_title', 'dash_order_count', 'dash_close',
             'dash_revenue_summary', 'dash_today', 'dash_this_week',
-            'dash_this_month', 'dash_this_cycle'
+            'dash_this_month', 'dash_this_cycle',
+            'dash_search_placeholder', 'dash_show_search', 'dash_hide_search'
         ];
         const strings = {};
         keys.forEach(k => strings[k] = t(k, null, lang));
@@ -251,6 +261,39 @@ Page({
             orderLimit: this.data.orderLimit + 20
         });
         this.calculateStats();
+    },
+
+    // Search methods
+    toggleSearch() {
+        this.setData({ showSearch: !this.data.showSearch });
+        if (!this.data.showSearch) {
+            this.clearSearch();
+        }
+    },
+
+    onSearchInput(e) {
+        this.setData({ searchQuery: e.detail.value });
+        this.performSearch();
+    },
+
+    onStatusFilter(e) {
+        const status = e.currentTarget.dataset.status;
+        this.setData({ 'searchFilters.status': status });
+        this.performSearch();
+    },
+
+    performSearch() {
+        const { searchQuery, searchFilters, recentOrders } = this.data;
+        const filtered = SearchUtils.searchOrders(recentOrders, searchQuery, searchFilters);
+        this.setData({ filteredOrders: filtered });
+    },
+
+    clearSearch() {
+        this.setData({
+            searchQuery: '',
+            searchFilters: { status: '', startDate: '', endDate: '' },
+            filteredOrders: []
+        });
     },
 
     formatTime(ts) {

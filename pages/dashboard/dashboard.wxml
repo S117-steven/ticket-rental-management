@@ -133,10 +133,33 @@
     </view>
   </view>
 
+  <!-- Search Bar -->
+  <view wx:if="{{showSearch}}" class="search-bar mb-4">
+    <view class="search-input-wrapper">
+      <text class="search-icon">🔍</text>
+      <input class="search-input" placeholder="{{t.dash_search_placeholder}}" 
+             value="{{searchQuery}}" bindinput="onSearchInput" />
+      <text wx:if="{{searchQuery}}" class="clear-btn" bindtap="clearSearch">✕</text>
+    </view>
+    <view class="filter-tags">
+      <view class="filter-tag {{searchFilters.status === '' ? 'active' : ''}}" 
+            bindtap="onStatusFilter" data-status="">全部</view>
+      <view class="filter-tag {{searchFilters.status === 'Pending' ? 'active' : ''}}" 
+            bindtap="onStatusFilter" data-status="Pending">待开始</view>
+      <view class="filter-tag {{searchFilters.status === 'Active' ? 'active' : ''}}" 
+            bindtap="onStatusFilter" data-status="Active">进行中</view>
+      <view class="filter-tag {{searchFilters.status === 'Completed' ? 'active' : ''}}" 
+            bindtap="onStatusFilter" data-status="Completed">已完成</view>
+    </view>
+  </view>
+
   <!-- Recent Activity Section -->
   <view class="mb-8">
     <view class="flex justify-between items-end mb-4">
       <text class="text-lg">{{t.dash_recent}}</text>
+      <text class="text-sm text-blue-600" bindtap="toggleSearch">
+        {{showSearch ? t.dash_hide_search : t.dash_show_search}}
+      </text>
     </view>
 
     <view class="card">
@@ -145,7 +168,7 @@
       </view>
       
       <scroll-view wx:else scroll-y class="recent-scroll-view">
-        <view wx:for="{{displayOrders}}" wx:key="id" class="p-4 border-b last-border-0" bindtap="onEditOrder" data-order="{{item}}">
+        <view wx:for="{{showSearch ? filteredOrders : displayOrders}}" wx:key="id" class="p-4 border-b last-border-0" bindtap="onEditOrder" data-order="{{item}}">
           <view class="flex items-center gap-4">
             <!-- Icon -->
             <view class="bg-green-50 text-green-600 rounded-full w-10 h-10 flex items-center justify-center text-xs">
